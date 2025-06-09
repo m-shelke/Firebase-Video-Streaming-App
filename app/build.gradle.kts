@@ -1,3 +1,4 @@
+
 plugins {
     alias(libs.plugins.android.application)
 
@@ -61,26 +62,32 @@ dependencies {
      When using the BoM, don't specify versions in Firebase dependencies*/
     implementation("com.google.firebase:firebase-analytics")
 
+    // FirebaseUI for Firebase Realtime Database
+    implementation ("com.firebaseui:firebase-ui-database:7.1.1")
+
+
     // Add the dependencies for any other desired Firebase products
     // https://firebase.google.com/docs/android/setup#available-libraries
 
+    val version_exoplayer = "2.16.1"
+
     //Exoplayer libraries
-    implementation("com.google.android.exoplayer:exoplayer:2.19.1")
-    implementation("com.google.android.exoplayer:exoplayer-core:2.19.1")
-    implementation("com.google.android.exoplayer:exoplayer-dash:2.19.1")
-    implementation("com.google.android.exoplayer:exoplayer-hls:2.19.1")
-    implementation("com.google.android.exoplayer:exoplayer-smoothstreaming:2.19.1")
-    implementation("com.google.android.exoplayer:exoplayer-ui:2.19.1")
+    implementation("com.google.android.exoplayer:exoplayer:$version_exoplayer")
+    implementation("com.google.android.exoplayer:exoplayer-core:$version_exoplayer")
+    implementation("com.google.android.exoplayer:exoplayer-dash:$version_exoplayer")
+    implementation("com.google.android.exoplayer:exoplayer-hls:$version_exoplayer")
+    implementation("com.google.android.exoplayer:exoplayer-smoothstreaming:$version_exoplayer")
+    implementation("com.google.android.exoplayer:exoplayer-ui:$version_exoplayer")
 
     //Picasso library
     implementation ("com.squareup.picasso:picasso:2.8")
 
 
 
-
-
-
-
+    //    ExoPlayer dependency
+//    implementation("androidx.media3:media3-exoplayer:1.5.0")
+//    implementation("androidx.media3:media3-exoplayer-dash:1.5.0")
+//    implementation("androidx.media3:media3-ui:1.5.0")
 
 
 

@@ -114,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
     //onClick method on showVideo Button
     public void showVideo(View view) {
 
+        startActivity(new Intent(MainActivity.this,ShowVideo.class));
     }
 
     //uploading video, when Button get clicked
@@ -173,12 +174,14 @@ public class MainActivity extends AppCompatActivity {
                                 //storing all Data Model data to Firebase Realtime Database
                                 databaseReference.child(i).setValue(video);
                             }else {
+                                //showing Toast message, when Vidoe is not uploaded
                                 Toast.makeText(MainActivity.this, "Video Failed", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
 
         }else {
+            //show Toast message, when Name EditText is misssing
             Toast.makeText(this, "Name Is Missing..!!", Toast.LENGTH_SHORT).show();
         }
     }
