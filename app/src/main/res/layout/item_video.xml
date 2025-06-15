@@ -6,30 +6,65 @@
     app:cardCornerRadius="10dp"
     app:cardUseCompatPadding="true">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_margin="5dp"
+        android:padding="5dp">
 
-    <TextView
-        android:id="@+id/item_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="1dp"
-        android:padding="5dp"
-        android:text="Choose Video"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:typeface="serif" />
 
-    <com.google.android.exoplayer2.ui.PlayerView
-        android:id="@+id/item_exoPlayer"
-        android:layout_width="match_parent"
-        android:layout_height="230dp"
-        android:layout_margin="3dp"
-        app:use_controller="true"
-        app:resize_mode="fill" />
+        <com.google.android.exoplayer2.ui.PlayerView
+            android:id="@+id/item_exoPlayer"
+            android:layout_width="190dp"
+            android:layout_height="100dp"
+            android:layout_margin="3dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:resize_mode="fill"
+            app:use_controller="false" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/item_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            android:padding="15dp"
+            android:text="Choose Video"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:typeface="serif"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/item_exoPlayer"
+            app:layout_constraintTop_toTopOf="@id/item_exoPlayer" />
+
+        <LinearLayout
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="0dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/item_name">
+
+            <ImageButton
+                android:id="@+id/like_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:src="@drawable/baseline_unlike_24" />
+
+            <TextView
+                android:id="@+id/like_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="120"
+                android:textAlignment="center"
+                android:typeface="serif"
+                android:textColor="#000000"/>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

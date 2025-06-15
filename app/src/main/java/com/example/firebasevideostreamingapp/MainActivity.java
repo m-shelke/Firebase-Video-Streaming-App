@@ -22,6 +22,7 @@ import com.example.firebasevideostreamingapp.databinding.ActivityMainBinding;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     //for upload operation
     UploadTask uploadTask;
 
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +82,14 @@ public class MainActivity extends AppCompatActivity {
         //starting VideoView
         binding.videoViewMain.start();
 
+        //get instance of the firebase auth for firebase auth related task
+        firebaseAuth=FirebaseAuth.getInstance();
 
+        if (firebaseAuth.getCurrentUser()==null){
+            //user is not logged in, move to LoginActivity
+            //MainActivity to RegisterEmailActivity
+            startActivity(new Intent(this, RegisterEmailActivity.class));
+        }
 
     }
 
@@ -91,11 +100,14 @@ public class MainActivity extends AppCompatActivity {
         //if requestCode, resultCode, data and data.getData() every thing according to condition, then execute this block of code
         if (requestCode == PICK_VIDEO && resultCode == RESULT_OK && data != null && data.getData() != null){
 
-            //saving Video Data to videoUri
-            videoUri = data.getData();
-
-            //setting video uri to videoView
-            binding.videoViewMain.setVideoURI(videoUri);
+           try {
+               //saving Video Data to videoUri
+               videoUri = data.getData();
+               //setting video uri to videoView
+               binding.videoViewMain.setVideoURI(videoUri);
+           }catch (Exception e){
+               Toast.makeText(this, "No File Selected: "+e.toString(), Toast.LENGTH_SHORT).show();
+           }
         }
     }
 
@@ -114,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
     //onClick method on showVideo Button
     public void showVideo(View view) {
 
-        startActivity(new Intent(MainActivity.this,ShowVideo.class));
+        startActivity(new Intent(MainActivity.this, ShowVideoActivity.class));
     }
 
     //uploading video, when Button get clicked

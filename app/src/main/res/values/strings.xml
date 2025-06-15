@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Firebase Video Streaming App</string>
+    <string name="aleady_having_account_login">aleady_having_account_login</string>
 </resources>

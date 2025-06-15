@@ -12,6 +12,8 @@
         android:id="@+id/videoView_main"
         android:layout_width="match_parent"
         android:layout_height="230dp"
+        android:layout_gravity="center"
+        android:foregroundGravity="center"
         android:backgroundTint="@color/black" />
 
     <EditText
@@ -22,7 +24,7 @@
         android:autoText="true"
         android:backgroundTint="#333232"
         android:hint="Video Name"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="20sp" />
 
     <TextView
