@@ -110,8 +110,6 @@ public class ProfileActivity extends AppCompatActivity {
 
             }
         });
-
-
         super.onStart();
     }
 }

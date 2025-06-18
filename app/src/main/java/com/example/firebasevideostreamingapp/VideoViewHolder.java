@@ -1,38 +1,17 @@
 package com.example.firebasevideostreamingapp;
 
 import android.app.Application;
-import android.content.Context;
-import android.media.MediaDataSource;
 import android.net.Uri;
-import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
-import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
-import com.google.android.exoplayer2.extractor.Extractor;
-import com.google.android.exoplayer2.extractor.ExtractorsFactory;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.SilenceMediaSource;
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.ExoTrackSelection;
-import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.upstream.BandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -41,23 +20,25 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-//ViewHolder class for getting the References of Layout File
-public class ViewHolder extends RecyclerView.ViewHolder {
+import org.w3c.dom.Text;
+
+//VideoViewHolder class for getting the References of Layout File
+public class VideoViewHolder extends RecyclerView.ViewHolder {
 
     //Layout Variable
     ExoPlayer exoPlayer;
     PlayerView playerView;
     ImageButton likeButton,commentImg;
-    TextView like_txt,commentCount;
+    TextView like_txt,commentCountTv;
 
     //likeCount variable for integer value count
-    int likeCount;
+    int likeCount,commentCount;
     //Database Reference
-    DatabaseReference reference;
+    DatabaseReference reference,postReference;
 
 
     //Matching super constructor
-    public ViewHolder(@NonNull View itemView) {
+    public VideoViewHolder(@NonNull View itemView) {
         super(itemView);
 
         //setting OnClickListener on itemView
@@ -87,7 +68,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         TextView textView = itemView.findViewById(R.id.item_name);
         playerView = itemView.findViewById(R.id.item_exoPlayer);
         commentImg = itemView.findViewById(R.id.item_comment);
-        commentCount = itemView.findViewById(R.id.commentCountTv);
+        commentCountTv = itemView.findViewById(R.id.commentCountTv);
 
 
         //setting name of Video to TextView
@@ -113,25 +94,26 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
 
 
+        //This code is deprecate now
+        /*try {
+            //provides estimates of the currently available Bandwidth
+            BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter.Builder(application).build();
 
+          TrackSelector trackSelector = new DefaultTrackSelector((Context) application, (ExoTrackSelection.Factory) bandwidthMeter);
 
-//        try {
-//            //provides estimates of the currently available Bandwidth
-//            BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter.Builder(application).build();
-//
-//          TrackSelector trackSelector = new DefaultTrackSelector((Context) application, (ExoTrackSelection.Factory) bandwidthMeter);
-//
-//            // SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(this);
-//
-//            Uri video = Uri.parse(videouri);
-//            DefaultHttpDataSource dataSourceFactory = new DefaultHttpDataSource("video");
-//            ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
-//
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
+            // SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(this);
+
+            Uri video = Uri.parse(videouri);
+            DefaultHttpDataSource dataSourceFactory = new DefaultHttpDataSource("video");
+            ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }*/
 
     }
+
+
 
     //creating setLikeButtonStatus() for checking video like status
     public void setLikeButtonStatus(final String postKey) {
@@ -141,10 +123,34 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
         //getting instance of Firebase Database and creating "Likes" path Json in Database
         reference = FirebaseDatabase.getInstance().getReference("Likes");
+
+        //Firebase Database Reference path of "Comments"
+        postReference = FirebaseDatabase.getInstance().getReference().child("Video").child(postKey).child("Comments");
+
         //getting instance of FirebaseAuth
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         //getting UID of Current user
         String userId = user.getUid();
+
+        //adding Value EventListener reference path of Database
+        postReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                if (snapshot.exists()){
+                    //getting Children Count
+                    commentCount = (int) snapshot.getChildrenCount();
+                    //and set it's to
+                    commentCountTv.setText(Integer.toString(commentCount));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
 
         //adding Value EventListener reference path of Database
         reference.addValueEventListener(new ValueEventListener() {
@@ -176,8 +182,21 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         });
     }
 
+    //creating this Function to set comments to RecyclerView
+    public void  setComments(Application application,  String comment, String date, String time, String userName){
+
+        //finding View id and references
+        TextView item_comment_dateTime = itemView.findViewById(R.id.item_comment_dateTime);
+        TextView item_comment_lorem = itemView.findViewById(R.id.item_comment_lorem);
+
+        //setting Date and Time text to item_comment_dateTime
+        item_comment_dateTime.setText("Date: "+date+" Time: "+time);
+        //setting Author name text to item_comment_lorem
+        item_comment_lorem.setText("Author: "+userName+"-"+"\n  "+comment);
+    }
+
     //calling interface Clicklistener and init obj
-    private ViewHolder.Clicklistener mClickListener;
+    private VideoViewHolder.Clicklistener mClickListener;
 
 
     //creating interface Clicklistener for both onClick and onLongClick event handler
@@ -187,8 +206,8 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         void onItemLongClick(View view, int position);
     }
 
-    //creating another setOnClickListener() method and passing ViewHolder.Clicklistener clickListener obj
-    public void setOnClickListener(ViewHolder.Clicklistener clickListener){
+    //creating another setOnClickListener() method and passing VideoViewHolder.Clicklistener clickListener obj
+    public void setOnClickListener(VideoViewHolder.Clicklistener clickListener){
         //assigning clickListener to mClickListener
         mClickListener = clickListener;
     }

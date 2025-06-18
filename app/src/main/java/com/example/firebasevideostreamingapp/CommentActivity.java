@@ -2,7 +2,9 @@ package com.example.firebasevideostreamingapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -13,8 +15,11 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.firebasevideostreamingapp.databinding.ActivityCommentBinding;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -45,6 +50,9 @@ public class CommentActivity extends AppCompatActivity {
     //getting postKey in Variable for ShowActivity
     String postKey;
 
+    //instance of Comments DataModel class
+    Comments comments;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +75,9 @@ public class CommentActivity extends AppCompatActivity {
         assert actionBar != null;
         //and hiding actionBar for this Activity screen
         actionBar.hide();
+
+        //init Comments DataModel class
+        comments = new Comments();
 
         //getting postKey form ShowActivity
         postKey = getIntent().getExtras().getString("postKey");
@@ -124,6 +135,8 @@ public class CommentActivity extends AppCompatActivity {
 
     }
 
+
+
     //Creating function for Comment Features
     private void commentFeatures(String userName) {
 
@@ -162,14 +175,14 @@ public class CommentActivity extends AppCompatActivity {
                 DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MMMM-yyyy");
 
                 LocalTime time = LocalTime.now();
-                DateTimeFormatter dateTimeFormatter2 = DateTimeFormatter.ofPattern("hh.mm");
+                DateTimeFormatter dateTimeFormatter2 = DateTimeFormatter.ofPattern("HH:mm");
 
                // formating to nextYearDate Date
                 String formatedDate = date.format(dateTimeFormatter);
                 String getTime = time.format(dateTimeFormatter2);
 
                 //Generating randomKey to stored comment details
-                final String randomKey = userId + date;
+                final String randomKey = userId + formatedDate + getTime;
 
                 //HashMap for storing data
                 HashMap hashMap = new HashMap();
@@ -181,9 +194,11 @@ public class CommentActivity extends AppCompatActivity {
                 hashMap.put("date", formatedDate);
                 //for time
                    hashMap.put("time",getTime);
+                   //for user name
+                hashMap.put("userName",userName);
 
                    //adding Complete Listener on postReference.child(randomKey)
-                postReference.child(randomKey).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener() {
+                postReference.child(randomKey).setValue(hashMap).addOnCompleteListener(new OnCompleteListener() {
                             @Override
                             public void onComplete(@NonNull Task task) {
 
@@ -205,5 +220,36 @@ public class CommentActivity extends AppCompatActivity {
 
             }
         }
+    }
+
+    //onStart() method
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        //FirebaseRecyclerOptions for RecyclerView UI
+        FirebaseRecyclerOptions<Comments> options = new FirebaseRecyclerOptions.Builder<Comments>()
+                .setQuery(postReference,Comments.class)
+                .build();
+
+
+        //FirebaseRecyclerAdapter
+        FirebaseRecyclerAdapter<Comments, VideoViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Comments, VideoViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull VideoViewHolder holder, int position, @NonNull Comments model) {
+                holder.setComments(getApplication(), model.getComment(), model.getDate(), model.getTime(), model.getUserName());
+            }
+
+            @NonNull
+            @Override
+            public VideoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_comments,parent,false);
+                return new VideoViewHolder(view);
+            }
+        };
+
+        firebaseRecyclerAdapter.startListening();
+        binding.commentRecyclerView.setAdapter(firebaseRecyclerAdapter);
+
     }
 }

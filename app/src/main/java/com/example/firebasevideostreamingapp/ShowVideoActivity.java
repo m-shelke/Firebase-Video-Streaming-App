@@ -96,14 +96,14 @@ public class ShowVideoActivity extends AppCompatActivity {
                         .build();
 
         //FirebaseRecyclerAdapter
-        FirebaseRecyclerAdapter<Video,ViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Video, ViewHolder>(options) {
+        FirebaseRecyclerAdapter<Video, VideoViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Video, VideoViewHolder>(options) {
             @Override
-            protected void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull Video model) {
-                //calling setSimpleExoPlayer() method of ViewHolder class and passing req. argument
+            protected void onBindViewHolder(@NonNull VideoViewHolder holder, int position, @NonNull Video model) {
+                //calling setSimpleExoPlayer() method of VideoViewHolder class and passing req. argument
                 holder.setSimpleExoPlayer(getApplication(), model.getName(), model.getVideouri());
 
                 //Overriding onItemClick and onItemLongClick abstract method
-                holder.setOnClickListener(new ViewHolder.Clicklistener() {
+                holder.setOnClickListener(new VideoViewHolder.Clicklistener() {
                     @Override
                     public void onItemClick(View view, int position) {
 
@@ -137,11 +137,11 @@ public class ShowVideoActivity extends AppCompatActivity {
             //onCreateViewHolder
             @NonNull
             @Override
-            public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            public VideoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 //inflating R.layout.item_video
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_video,parent,false);
-                //returning ViewHolder(view); with view
-                return new ViewHolder(view);
+                //returning VideoViewHolder(view); with view
+                return new VideoViewHolder(view);
             }
         };
 
@@ -164,11 +164,11 @@ public class ShowVideoActivity extends AppCompatActivity {
                         .build();
 
         //FirebaseRecyclerAdapter
-        FirebaseRecyclerAdapter<Video,ViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Video, ViewHolder>(options) {
+        FirebaseRecyclerAdapter<Video, VideoViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Video, VideoViewHolder>(options) {
             @Override
-            protected void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull Video model) {
+            protected void onBindViewHolder(@NonNull VideoViewHolder holder, int position, @NonNull Video model) {
 
-                //calling setSimpleExoPlayer() method of ViewHolder class and passing req. argument
+                //calling setSimpleExoPlayer() method of VideoViewHolder class and passing req. argument
                 holder.setSimpleExoPlayer(getApplication(), model.getName(), model.getVideouri());
 
                 //init FirebaseUser and FirebaseAuth
@@ -179,7 +179,7 @@ public class ShowVideoActivity extends AppCompatActivity {
                  final String postKey = getRef(position).getKey();
 
                 //Overriding onItemClick and onItemLongClick abstract method
-                holder.setOnClickListener(new ViewHolder.Clicklistener() {
+                holder.setOnClickListener(new VideoViewHolder.Clicklistener() {
                     @Override
                     public void onItemClick(View view, int position) {
                         //getting name item clicked
@@ -211,7 +211,7 @@ public class ShowVideoActivity extends AppCompatActivity {
 
 
 
-                //calling  holder.setLikeButtonStatus(postKey); method from ViewHolder class
+                //calling  holder.setLikeButtonStatus(postKey); method from VideoViewHolder class
                 holder.setLikeButtonStatus(postKey);
 
                 //setting onClicked event on commentImg ImageButton
@@ -264,11 +264,11 @@ public class ShowVideoActivity extends AppCompatActivity {
             //onCreateViewHolder
             @NonNull
             @Override
-            public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            public VideoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 //inflating R.layout.item_video
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_video,parent,false);
-                //returning ViewHolder(view); with view
-                return new ViewHolder(view);
+                //returning VideoViewHolder(view); with view
+                return new VideoViewHolder(view);
             }
         };
 
