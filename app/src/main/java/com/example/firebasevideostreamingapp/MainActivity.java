@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         //get instance of the firebase auth for firebase auth related task
         firebaseAuth=FirebaseAuth.getInstance();
 
-        if (firebaseAuth.getCurrentUser()==null){
+        if (firebaseAuth.getCurrentUser()==null) {
             //user is not logged in, move to LoginActivity
             //MainActivity to RegisterEmailActivity
             startActivity(new Intent(this, RegisterEmailActivity.class));

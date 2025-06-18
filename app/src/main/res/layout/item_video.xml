@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardCornerRadius="10dp"
@@ -39,9 +40,9 @@
             app:layout_constraintTop_toTopOf="@id/item_exoPlayer" />
 
         <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_margin="0dp"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
@@ -60,10 +61,34 @@
                 android:layout_height="wrap_content"
                 android:text="120"
                 android:textAlignment="center"
-                android:typeface="serif"
-                android:textColor="#000000"/>
+                android:textColor="#000000"
+                android:typeface="serif" />
 
         </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/item_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/outline_mode_comment_24"
+            app:layout_constraintEnd_toStartOf="@+id/linearLayout"
+            app:layout_constraintTop_toTopOf="@+id/linearLayout" />
+
+        <TextView
+            android:id="@+id/commentCountTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="20"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:typeface="serif"
+            app:layout_constraintEnd_toEndOf="@+id/item_comment"
+            app:layout_constraintStart_toStartOf="@+id/item_comment"
+            app:layout_constraintTop_toBottomOf="@+id/item_comment"
+            app:layout_constraintBottom_toBottomOf="@id/linearLayout"/>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

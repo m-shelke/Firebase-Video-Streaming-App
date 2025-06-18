@@ -167,6 +167,7 @@ public class ShowVideoActivity extends AppCompatActivity {
         FirebaseRecyclerAdapter<Video,ViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Video, ViewHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull Video model) {
+
                 //calling setSimpleExoPlayer() method of ViewHolder class and passing req. argument
                 holder.setSimpleExoPlayer(getApplication(), model.getName(), model.getVideouri());
 
@@ -209,8 +210,21 @@ public class ShowVideoActivity extends AppCompatActivity {
                 });
 
 
+
                 //calling  holder.setLikeButtonStatus(postKey); method from ViewHolder class
                 holder.setLikeButtonStatus(postKey);
+
+                //setting onClicked event on commentImg ImageButton
+                holder.commentImg.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //starting CommentActivity and passing video postKey to CommentActivity
+                        Intent intent = new Intent(ShowVideoActivity.this, CommentActivity.class);
+                        intent.putExtra("postKey",postKey);
+                        startActivity(intent);
+                    }
+                });
+
                 //setting onClick on like Button clicked / trigger
                 holder.likeButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -317,6 +331,7 @@ public class ShowVideoActivity extends AppCompatActivity {
 
         //or this is way of Creating Alert Builder
         AlertDialog alertDialog = builder.create();
+        //show alertDialog here
         alertDialog.show();
     }
 
@@ -353,5 +368,23 @@ public class ShowVideoActivity extends AppCompatActivity {
         });
 
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        //get id of the menu item clicked
+        int itemId = item.getItemId();
+
+        //if the item id is equal to person_item, then
+        if (itemId == R.id.person_item){
+            //start ProfileActivity.class
+            Intent intent = new Intent(ShowVideoActivity.this, ProfileActivity.class);
+            //and start activity
+            startActivity(intent);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

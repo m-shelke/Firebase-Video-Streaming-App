@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,8 +47,8 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     //Layout Variable
     ExoPlayer exoPlayer;
     PlayerView playerView;
-    ImageView likeButton;
-    TextView like_txt;
+    ImageButton likeButton,commentImg;
+    TextView like_txt,commentCount;
 
     //likeCount variable for integer value count
     int likeCount;
@@ -85,6 +86,9 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         //Finding XML Layout ID's
         TextView textView = itemView.findViewById(R.id.item_name);
         playerView = itemView.findViewById(R.id.item_exoPlayer);
+        commentImg = itemView.findViewById(R.id.item_comment);
+        commentCount = itemView.findViewById(R.id.commentCountTv);
+
 
         //setting name of Video to TextView
         textView.setText(name);

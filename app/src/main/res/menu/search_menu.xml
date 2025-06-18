@@ -10,7 +10,9 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/three_dots_item"
-        android:title="Three Dots" />
+        android:id="@+id/person_item"
+        android:title="Profile"
+        android:icon="@drawable/baseline_person_4_24"
+        app:showAsAction="always"/>
 
 </menu>

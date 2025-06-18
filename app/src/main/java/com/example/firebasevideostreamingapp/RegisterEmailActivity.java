@@ -38,6 +38,14 @@ public class RegisterEmailActivity extends AppCompatActivity {
         //get instance of firebase auth for Auth related task
         firebaseAuth = FirebaseAuth.getInstance();
 
+        //if the user is already log-in, then jumped to MainActivity
+        if (firebaseAuth.getCurrentUser() != null){
+            //if user log-in directly starting MainActivity
+            startActivity(new Intent(RegisterEmailActivity.this,MainActivity.class));
+            //and finish this activity here
+            finish();
+        }
+
         //initiated/set ProgressDialog while sign-up
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Please Wait..");
