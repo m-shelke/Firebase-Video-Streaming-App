@@ -31,7 +31,7 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
     //Layout Variable
     ExoPlayer exoPlayer;
     PlayerView playerView;
-    ImageButton likeButton,commentImg;
+    ImageButton likeButton,commentImg,downloadBtn;
     TextView like_txt,commentCountTv;
 
     //likeCount variable for integer value count
@@ -43,6 +43,8 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
     //Matching super constructor
     public VideoViewHolder(@NonNull View itemView) {
         super(itemView);
+
+        downloadBtn = itemView.findViewById(R.id.item_download);
 
         //setting OnClickListener on itemView
         itemView.setOnClickListener(new View.OnClickListener() {
@@ -72,7 +74,6 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
         playerView = itemView.findViewById(R.id.item_exoPlayer);
         commentImg = itemView.findViewById(R.id.item_comment);
         commentCountTv = itemView.findViewById(R.id.commentCountTv);
-
 
         //setting name of Video to TextView
         textView.setText(name);

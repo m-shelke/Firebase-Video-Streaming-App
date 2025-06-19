@@ -52,6 +52,7 @@
                 android:id="@+id/like_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:padding="1dp"
                 android:background="@android:color/transparent"
                 android:src="@drawable/baseline_unlike_24" />
 
@@ -70,6 +71,7 @@
             android:id="@+id/item_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="1dp"
             android:background="@android:color/transparent"
             android:src="@drawable/outline_mode_comment_24"
             app:layout_constraintEnd_toStartOf="@+id/linearLayout"
@@ -88,6 +90,18 @@
             app:layout_constraintStart_toStartOf="@+id/item_comment"
             app:layout_constraintTop_toBottomOf="@+id/item_comment"
             app:layout_constraintBottom_toBottomOf="@id/linearLayout"/>
+
+
+        <ImageButton
+            android:id="@+id/item_download"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/baseline_cloud_download_24"
+            app:layout_constraintBottom_toBottomOf="@+id/item_exoPlayer"
+            app:layout_constraintStart_toEndOf="@+id/item_exoPlayer" />
+
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,8 +1,15 @@
 package com.example.firebasevideostreamingapp;
 
+import android.Manifest;
+import android.app.DownloadManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,6 +39,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Date;
 import java.util.Objects;
 
 public class ShowVideoActivity extends AppCompatActivity {
@@ -45,8 +53,11 @@ public class ShowVideoActivity extends AppCompatActivity {
     //checking is like or not to video
     boolean likeChecker = false;
 
+    //Storage Runtime permission
+    private  static final int STORAGE_PER = 100;
+
     //name String for getting and setting Recycler Item and url String for passing click item url to FullScreenActivity
-    String name,url;
+    String name,url,downloadUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -210,6 +221,36 @@ public class ShowVideoActivity extends AppCompatActivity {
                 });
 
 
+                //setting ClickListener on download button
+                holder.downloadBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        //if Build.VERSION.SDK_INT is greater and equal to  Build.VERSION_CODES.M
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+
+                            //if PackageManager.PERMISSION_DENIED
+                            if (checkCallingOrSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+                                String permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
+                                //RequestPermissions
+                                requestPermissions(new String[]{permission},STORAGE_PER);
+                            }else {
+                                //getting downloadUrl form DataModel class
+                                downloadUrl = getItem(holder.getAdapterPosition()).getVideouri();
+
+                                //calling  startDownloading(downloadUrl); method
+                                startDownloading(downloadUrl);
+                            }
+                        }else {
+                            //getting downloadUrl form DataModel class
+                            downloadUrl = getItem(holder.getAdapterPosition()).getVideouri();
+
+                            //calling  startDownloading(downloadUrl); method
+                            startDownloading(downloadUrl);
+                        }
+                    }
+                });
 
                 //calling  holder.setLikeButtonStatus(postKey); method from VideoViewHolder class
                 holder.setLikeButtonStatus(postKey);
@@ -276,6 +317,48 @@ public class ShowVideoActivity extends AppCompatActivity {
         firebaseRecyclerAdapter.startListening();
         //finally setting firebaseRecyclerAdapter to XML RecyclerView
         binding.recyclerview.setAdapter(firebaseRecyclerAdapter);
+    }
+
+    //creating method for Downloading video from Firebase cloud storage
+    private void startDownloading(String downloadUrl) {
+
+        //instance of  DownloadManager.Request and providing request address as well
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(downloadUrl));
+        //Allowing Video download over on Mobile Data and WiFi
+        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+        //setting Title of Download notification
+        request.setTitle("Download");
+        //setting Description of Download notification
+        request.setDescription("Video File Downloading...");
+
+        //allowing Scanning By MediaScanner
+        request.allowScanningByMediaScanner();
+        //after successfully downing is completed, notify user on Device Screen
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        //path, where video is saved and on what name is saved, i.e System.currentTimeMillis
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,""+System.currentTimeMillis());
+
+        //instance of DownloadManager, and getting System Service for DOWNLOAD_SERVICE
+        DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+        //Enqueue a new download. The download will start automatically once the download manager is ready to execute it and connectivity is available
+        manager.enqueue(request);
+    }
+
+    //checking Request Permissions Result
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == STORAGE_PER) {//if grantResults.length > 0 and grantResults[0] == PackageManager.PERMISSION_GRANTED is also 0
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //start downloading Video, we call this  startDownloading(downloadUrl); method
+                startDownloading(downloadUrl);
+            } else {
+                //and if the Permission is denied, then showing Toast message
+                Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     //creating method for showing Delete dialog
