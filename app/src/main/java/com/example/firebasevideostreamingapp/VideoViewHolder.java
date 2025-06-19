@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -21,6 +22,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
+
+import java.util.Collections;
 
 //VideoViewHolder class for getting the References of Layout File
 public class VideoViewHolder extends RecyclerView.ViewHolder {
@@ -74,27 +77,41 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
         //setting name of Video to TextView
         textView.setText(name);
 
-        //Building ExoPlayer
-        exoPlayer = new ExoPlayer.Builder(application).build();
+//        //Building ExoPlayer
+//        exoPlayer = new ExoPlayer.Builder(application).build();
+//        //setting Player to ExoPlayer PlayView
+//        playerView.setPlayer(exoPlayer);
+//
+//        //parsing Uri
+//        Uri uri = Uri.parse(videouri);
+//        //creating obj of MediaItem class and providing resource id i.e uri
+//        MediaItem mediaItem = MediaItem.fromUri(uri);
+//
+//        //setting media item to Exoplayer
+//        exoPlayer.setMediaItem(mediaItem);
+//        //preparing ExoPlayer now
+//        exoPlayer.prepare();
+//        //by default, when video is ready to play, we don't play it automatically or not play when video ready play
+//        exoPlayer.setPlayWhenReady(false);
+
+        //Building SimpleExoPlayer
+        SimpleExoPlayer simpleExoPlayer = new SimpleExoPlayer.Builder(application).build();
         //setting Player to ExoPlayer PlayView
-        playerView.setPlayer(exoPlayer);
-
-        //parsing Uri
-        Uri uri = Uri.parse(videouri);
+        playerView.setPlayer(simpleExoPlayer);
         //creating obj of MediaItem class and providing resource id i.e uri
-        MediaItem mediaItem = MediaItem.fromUri(uri);
-
+        MediaItem mediaItem = MediaItem.fromUri(videouri);
         //setting media item to Exoplayer
-        exoPlayer.setMediaItem(mediaItem);
-        //preparing ExoPlayer now
-        exoPlayer.prepare();
+        simpleExoPlayer.addMediaItems(Collections.singletonList(mediaItem));
+        //preparing SimpleExoPlayer
+        simpleExoPlayer.prepare();
         //by default, when video is ready to play, we don't play it automatically or not play when video ready play
-        exoPlayer.setPlayWhenReady(false);
+        simpleExoPlayer.setPlayWhenReady(false);
 
 
 
 
-        //This code is deprecate now
+
+        //This code is deprecate now, because we used updated dependencies
         /*try {
             //provides estimates of the currently available Bandwidth
             BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter.Builder(application).build();
