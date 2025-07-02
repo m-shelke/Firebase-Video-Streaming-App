@@ -4,55 +4,94 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:expandableTextView="http://schemas.android.com/tools"
     app:cardCornerRadius="10dp"
+    app:cardElevation="10dp"
+    app:cardPreventCornerOverlap="true"
     app:cardUseCompatPadding="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="5dp"
-        android:padding="5dp">
+        android:layout_height="wrap_content"
+        android:padding="3dp">
 
-
-        <com.google.android.exoplayer2.ui.PlayerView
-            android:id="@+id/item_exoPlayer"
-            android:layout_width="190dp"
-            android:layout_height="100dp"
-            android:layout_margin="3dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/exoCardView"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:resize_mode="fill"
-            app:use_controller="false" />
+            app:cardCornerRadius="10dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="16dp"
+            app:cardUseCompatPadding="true"
+            app:cardPreventCornerOverlap="true">
+
+            <com.google.android.exoplayer2.ui.PlayerView
+                android:id="@+id/item_exoPlayer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:resize_mode="fill"
+                app:auto_show="true"
+                app:use_controller="false" />
+
+
+        </androidx.cardview.widget.CardView>
+
 
         <TextView
             android:id="@+id/item_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="1dp"
-            android:padding="15dp"
-            android:text="Choose Video"
-            android:textSize="16sp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:padding="5dp"
+            android:text="Title "
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textStyle="bold"
             android:typeface="serif"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/item_exoPlayer"
-            app:layout_constraintTop_toTopOf="@id/item_exoPlayer" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/exoCardView"/>
+
+
+
+        <io.github.glailton.expandabletextview.ExpandableTextView
+            android:id="@+id/item_ExpandableTv"
+            style="@style/TextAppearance.AppCompat.Body1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            app:isUnderlined="true"
+            android:layout_marginEnd="16dp"
+            android:text="@string/very_long_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/linearLayout"
+            app:layout_constraintEnd_toStartOf="@id/exoCardView"
+            app:layout_constraintTop_toBottomOf="@id/item_name"
+            app:layout_goneMarginTop="4dp"
+            android:layout_marginBottom="5dp"
+            expandableTextView:fadeAnimationEnabled="true" />
+
+
+
 
         <LinearLayout
             android:id="@+id/linearLayout"
-            android:layout_width="50dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:layout_marginStart="12dp"
             android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/item_name">
+            app:layout_constraintTop_toTopOf="@id/linearLayout2"
+            app:layout_constraintStart_toEndOf="@id/linearLayout2"
+            app:layout_constraintBottom_toBottomOf="@id/linearLayout2">
 
             <ImageButton
                 android:id="@+id/like_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="1dp"
                 android:background="@android:color/transparent"
                 android:src="@drawable/baseline_unlike_24" />
 
@@ -60,22 +99,29 @@
                 android:id="@+id/like_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="120"
+                android:text="0"
                 android:textAlignment="center"
                 android:textColor="#000000"
                 android:typeface="serif" />
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="@id/item_ExpandableTv"
+            app:layout_constraintBottom_toBottomOf="parent">
+
         <ImageButton
             android:id="@+id/item_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="1dp"
             android:background="@android:color/transparent"
-            android:src="@drawable/outline_mode_comment_24"
-            app:layout_constraintEnd_toStartOf="@+id/linearLayout"
-            app:layout_constraintTop_toTopOf="@+id/linearLayout" />
+            android:src="@drawable/outline_mode_comment_24"/>
 
         <TextView
             android:id="@+id/commentCountTv"
@@ -85,22 +131,21 @@
             android:text="0"
             android:textAlignment="center"
             android:textColor="#000000"
-            android:typeface="serif"
-            app:layout_constraintEnd_toEndOf="@+id/item_comment"
-            app:layout_constraintStart_toStartOf="@+id/item_comment"
-            app:layout_constraintTop_toBottomOf="@+id/item_comment"
-            app:layout_constraintBottom_toBottomOf="@id/linearLayout"/>
+            android:typeface="serif"/>
+
+        </LinearLayout>
 
 
         <ImageButton
             android:id="@+id/item_download"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="4dp"
+            android:padding="6dp"
             android:background="@android:color/transparent"
             android:src="@drawable/baseline_cloud_download_24"
-            app:layout_constraintBottom_toBottomOf="@+id/item_exoPlayer"
-            app:layout_constraintStart_toEndOf="@+id/item_exoPlayer" />
+            app:layout_constraintTop_toBottomOf="@id/exoCardView"
+            app:layout_constraintEnd_toEndOf="@id/exoCardView"/>
+
 
 
 

@@ -2,10 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/emailLogin"
     android:layout_width="match_parent"
-    android:id="@+id/registerActivity"
-    android:layout_height="wrap_content"
-    tools:context=".RegisterEmailActivity">
+    android:layout_height="match_parent"
+    tools:context=".NewUI.EmailLoginActivity">
 
 <!--    <RelativeLayout-->
 <!--        android:id="@+id/toolbarRL"-->
@@ -22,7 +22,7 @@
 <!--            android:padding="10dp"-->
 <!--            android:src="@drawable/baseline_arrow_back_ios_24" />-->
 
-<!--        &lt;!&ndash;TextView: Toolbar Title&ndash;&gt;-->
+<!--        &lt;!&ndash; TextViw-To show toolbar title &ndash;&gt;-->
 <!--        <TextView-->
 <!--            android:id="@+id/toolbarTitleTv"-->
 <!--            style="@style/TextAppearance.MaterialComponents.Body1"-->
@@ -30,9 +30,9 @@
 <!--            android:layout_height="wrap_content"-->
 <!--            android:layout_centerVertical="true"-->
 <!--            android:layout_toEndOf="@id/toolbarBackBtn"-->
-<!--            android:text="Register" />-->
+<!--            android:text="Login" />-->
 
-<!--        &lt;!&ndash;View: To make Toolbar look separate from other UI &ndash;&gt;-->
+<!--        &lt;!&ndash; View: To make Toolbar look separate from other UI&ndash;&gt;-->
 <!--        <View-->
 <!--            android:layout_width="match_parent"-->
 <!--            android:layout_height="1dp"-->
@@ -41,9 +41,33 @@
 
 <!--    </RelativeLayout>-->
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/SkipCv"
+        android:layout_width="60dp"
+        android:layout_height="35dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?selectableItemBackground"
+        app:cardCornerRadius="10dp">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawableStart="@drawable/round_close_24"
+            android:gravity="center_vertical"
+            android:typeface="serif"
+            android:text="Skip" />
+
+    </androidx.cardview.widget.CardView>
+
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginTop="30dp"
         android:padding="10dp">
 
@@ -55,13 +79,25 @@
             android:layout_centerHorizontal="true"
             android:background="#D1C4E9"
             android:padding="1dp"
-            android:src="@drawable/baseline_person_4_24"
+            android:src="@drawable/baseline_account_box_24"
             app:shapeAppearanceOverlay="@style/ImageStyle_Corner_Rounded" />
+
+        <!-- TextView: Just to show Liable text-->
+<!--        <TextView-->
+<!--            android:id="@+id/loginLableTv"-->
+<!--            style="@style/TextAppearance.MaterialComponents.Subtitle1"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_below="@id/profileIv"-->
+<!--            android:layout_centerHorizontal="true"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:padding="5dp"-->
+<!--            android:text="Login To Your Account" />-->
 
 
         <!-- TextView: Just to show Liable text-->
         <TextView
-            android:id="@+id/registerLableTv"
+            android:id="@+id/loginLableTv"
             style="@style/TextAppearance.MaterialComponents.Subtitle1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -72,22 +108,23 @@
             android:layout_marginTop="10dp"
             android:padding="5dp"
             android:textSize="20sp"
-            android:text="Create New Account" />
+            android:text="Login To Your Account" />
 
 
-        <!--TextInputLayout: Input user email from register -->
+        <!-- TextInputLayout: Input account email from login-->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/emaTil"
+            android:id="@+id/emailTil"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/registerLableTv"
+            android:layout_below="@id/loginLableTv"
             android:layout_marginTop="10dp"
             android:hint="Email"
             app:boxCornerRadiusBottomEnd="8dp"
             app:boxCornerRadiusBottomStart="8dp"
             app:boxCornerRadiusTopEnd="8dp"
             app:boxCornerRadiusTopStart="8dp"
-            app:startIconDrawable="@drawable/baseline_alternate_email_24">
+            app:startIconDrawable="@drawable/baseline_email_24">
 
             <EditText
                 android:id="@+id/emailEt"
@@ -97,12 +134,14 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-         <!--TextInputLayout: Input user password from register -->
+        <!--TextInputLayout: Input account password from login -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/passwordTil"
+            android:id="@+id/password_Til"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/emaTil"
+            android:layout_below="@id/emailTil"
+            android:layout_marginTop="10dp"
             android:hint="Password"
             app:boxCornerRadiusBottomEnd="8dp"
             app:boxCornerRadiusBottomStart="8dp"
@@ -119,78 +158,37 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!--TextInputLayout: Input confirmation of user password from register -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/cPasswordTil"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/passwordTil"
-            android:hint="Confirmed Password"
-            app:boxCornerRadiusBottomEnd="8dp"
-            app:boxCornerRadiusBottomStart="8dp"
-            app:boxCornerRadiusTopEnd="8dp"
-            app:boxCornerRadiusTopStart="8dp"
-            app:passwordToggleEnabled="true"
-            app:startIconDrawable="@drawable/baseline_lock_person_24">
-
-            <EditText
-                android:id="@+id/cPasswordEt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- TextView: click to goto LoginEmailActivity -->
+        <!-- TextView: click to goto RegisterEmailActivity -->
         <TextView
-            android:id="@+id/haveAccountTv"
+            android:id="@+id/noAccountTv"
             style="@style/TextAppearance.AppCompat.Body2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/cPasswordTil"
+            android:layout_below="@id/password_Til"
+            android:layout_marginTop="5dp"
+            android:text="@string/not_having_account_register"/>
+
+        <TextView
+            android:id="@+id/forgotPasswordTv"
+            style="@style/TextAppearance.AppCompat.Body2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/noAccountTv"
             android:layout_marginTop="8dp"
-            android:text="@string/aleady_having_account_login" />
+            android:text="@string/forgot_password_recover"/>
 
-
-
-        <!-- MaterialButton: clicked to register user. -->
+        <!-- MaterialButton: clicked to login user. -->
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/registerBtn"
+            android:id="@+id/loginBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:minHeight="60dp"
-            android:text="Register"
-            android:typeface="serif"
             android:textStyle="bold"
+            android:typeface="serif"
+            android:text="Login"
             app:cornerRadius="8dp" />
 
-
-
     </RelativeLayout>
-
-<!--    <androidx.cardview.widget.CardView-->
-<!--        android:id="@+id/SkipCv"-->
-<!--        android:layout_width="60dp"-->
-<!--        android:layout_height="35dp"-->
-<!--        android:layout_alignParentEnd="true"-->
-<!--        android:layout_marginTop="0dp"-->
-<!--        android:layout_marginEnd="8dp"-->
-<!--        android:clickable="true"-->
-<!--        android:focusable="true"-->
-<!--        android:foreground="?selectableItemBackground"-->
-<!--        app:cardCornerRadius="10dp">-->
-
-
-<!--        <TextView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:drawableStart="@drawable/round_close_24"-->
-<!--            android:gravity="center_vertical"-->
-<!--            android:typeface="serif"-->
-<!--            android:text="Skip" />-->
-
-<!--    </androidx.cardview.widget.CardView>-->
-
 
 </RelativeLayout>

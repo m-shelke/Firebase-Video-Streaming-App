@@ -82,6 +82,9 @@ dependencies {
     //Picasso library
     implementation ("com.squareup.picasso:picasso:2.8")
 
+    //Expandable TextView Dependency
+    implementation("io.github.glailton.expandabletextview:expandabletextview:1.0.4")
+
 
 
     //    ExoPlayer dependency

@@ -75,6 +75,8 @@ public class ShowVideoActivity extends AppCompatActivity {
             return insets;
         });
 
+        setSupportActionBar(binding.toolBar);
+
         //init and set ActionBar Title Text
         Objects.requireNonNull(getSupportActionBar()).setTitle("");
 
@@ -111,7 +113,7 @@ public class ShowVideoActivity extends AppCompatActivity {
             @Override
             protected void onBindViewHolder(@NonNull VideoViewHolder holder, int position, @NonNull Video model) {
                 //calling setSimpleExoPlayer() method of VideoViewHolder class and passing req. argument
-                holder.setSimpleExoPlayer(getApplication(), model.getName(), model.getVideouri());
+                holder.setSimpleExoPlayer(getApplication(), model.getName(), model.getDescription(), model.getVideouri());
 
                 //Overriding onItemClick and onItemLongClick abstract method
                 holder.setOnClickListener(new VideoViewHolder.Clicklistener() {
@@ -180,7 +182,7 @@ public class ShowVideoActivity extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull VideoViewHolder holder, int position, @NonNull Video model) {
 
                 //calling setSimpleExoPlayer() method of VideoViewHolder class and passing req. argument
-                holder.setSimpleExoPlayer(getApplication(), model.getName(), model.getVideouri());
+                holder.setSimpleExoPlayer(getApplication(), model.getName(),model.getDescription(), model.getVideouri());
 
                 //init FirebaseUser and FirebaseAuth
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -193,8 +195,10 @@ public class ShowVideoActivity extends AppCompatActivity {
                 holder.setOnClickListener(new VideoViewHolder.Clicklistener() {
                     @Override
                     public void onItemClick(View view, int position) {
+
                         //getting name item clicked
                         name = getItem(position).getName();
+
                         //getting uri item clicked
                         url = getItem(position).getVideouri();
 
@@ -215,6 +219,7 @@ public class ShowVideoActivity extends AppCompatActivity {
 
                         //getting name item, that want to Delete
                         name = getItem(position).getName();
+
                         //creating method for Deleting RecyclerView item
                         showDeleteDialog(name);
                     }

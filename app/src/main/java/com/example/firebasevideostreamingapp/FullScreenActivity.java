@@ -4,9 +4,12 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.media.Image;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Layout;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -61,6 +64,16 @@ public class FullScreenActivity extends AppCompatActivity {
         });
 
 
+        //for setting statusBarColor of Activity
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            Window window = getWindow();
+//            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+//            window.setStatusBarColor(ContextCompat.getColor(this, R.color.black));
+//        }
+
+
+
+
 //        ActionBar actionBar = getSupportActionBar();
 //        actionBar.setTitle("Full Screen");
 //
@@ -77,8 +90,6 @@ public class FullScreenActivity extends AppCompatActivity {
         ImageView fullScreenButton = binding.playerView.findViewById(R.id.exo_fullscreen_icon);
 
         initializePlayer();
-
-
 
 
         fullScreenButton.setOnClickListener(new View.OnClickListener() {

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NewUI.HomeActivity"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="User Name Req. To Clarify, The Who Is Commenting on Video"
+        android:layout_margin="2dp"
+        android:drawableStart="@drawable/baseline_star_24"
+        android:layout_gravity="top"
+        android:gravity="center"
+        android:paddingBottom="20dp"
+        android:textAlignment="center"
+        android:drawableTint="@color/white"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+
+
+    <TextView
+        android:id="@+id/userName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:text="User Name"
+        android:textSize="20sp"
+        android:typeface="serif" />
+
+
+    <!--TextInputLayout: Input User Name-->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/nameTil"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="Name"
+        android:layout_margin="10dp"
+        app:boxCornerRadiusTopStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:startIconDrawable="@drawable/baseline_person_4_24">
+
+        <EditText
+            android:id="@+id/nameEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textCapWords"
+            tools:ignore="TouchTargetSizeCheck" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/saveBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        app:cornerRadius="8dp"
+        app:icon="@drawable/baseline_cloud_upload_24"
+        android:layout_margin="10dp"
+        android:text="Save"/>
+
+    <!--MaterialButton: to logout from account-->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/logOutBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cornerRadius="8dp"
+        android:layout_margin="10dp"
+        android:text="LogOut"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?selectableItemBackground"
+        app:icon="@drawable/baseline_directions_run_24"/>
+
+
+</LinearLayout>
+
+
+
+
+
+
+
+
+
+
+

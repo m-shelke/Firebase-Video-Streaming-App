@@ -1,12 +1,16 @@
 package com.example.firebasevideostreamingapp;
 
+import static io.github.glailton.expandabletextview.ExpandableTextViewKt.EXPAND_TYPE_LAYOUT;
+
 import android.app.Application;
 import android.net.Uri;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.exoplayer2.ExoPlayer;
@@ -25,31 +29,40 @@ import org.w3c.dom.Text;
 
 import java.util.Collections;
 
+import io.github.glailton.expandabletextview.ExpandableTextView;
+
 //VideoViewHolder class for getting the References of Layout File
 public class VideoViewHolder extends RecyclerView.ViewHolder {
 
     //Layout Variable
-    ExoPlayer exoPlayer;
+    SimpleExoPlayer simpleExoPlayer;
+
+    //PlayerView instance
     PlayerView playerView;
-    ImageButton likeButton,commentImg,downloadBtn;
+
+    //XML ImageButton, TextView and LinearLayout variable declaration
+    public ImageButton likeButton,commentImg,downloadBtn;
     TextView like_txt,commentCountTv;
+    public LinearLayout commentBoxclick;
 
     //likeCount variable for integer value count
     int likeCount,commentCount;
-    //Database Reference
-    DatabaseReference reference,postReference;
 
+    //Database instance
+    DatabaseReference reference,postReference;
 
     //Matching super constructor
     public VideoViewHolder(@NonNull View itemView) {
         super(itemView);
 
+        //finding XML view
         downloadBtn = itemView.findViewById(R.id.item_download);
 
         //setting OnClickListener on itemView
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 //getting item clicked position
                 mClickListener.onItemClick(v,getAdapterPosition());
             }
@@ -59,6 +72,7 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
         itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+
                 //getting item clicked position
                 mClickListener.onItemLongClick(v,getAdapterPosition());
                 return false;
@@ -67,16 +81,33 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
     }
 
     //Method for setting ExoPlayer
-    public void setSimpleExoPlayer(Application application,String name, String videouri){
+    public void setSimpleExoPlayer(Application application,String name, String description, String videouri){
 
         //Finding XML Layout ID's
         TextView textView = itemView.findViewById(R.id.item_name);
+        ExpandableTextView expandableTextView = itemView.findViewById(R.id.item_ExpandableTv);
         playerView = itemView.findViewById(R.id.item_exoPlayer);
         commentImg = itemView.findViewById(R.id.item_comment);
         commentCountTv = itemView.findViewById(R.id.commentCountTv);
 
         //setting name of Video to TextView
         textView.setText(name);
+
+        //Expandable TextView coding part
+       expandableTextView
+                .setAnimationDuration(500)
+                .setReadMoreText("View More")
+                .setReadLessText("View Less")
+                .setCollapsedLines(3)
+                .setIsExpanded(false)
+                .setIsUnderlined(true)
+                .setExpandType(EXPAND_TYPE_LAYOUT)
+                .setEllipsizedTextColor(ContextCompat.getColor(application, R.color.blue));
+
+       //and setting Description to Expandable TextView
+       expandableTextView.setText(description);
+
+
 
 //        //Building ExoPlayer
 //        exoPlayer = new ExoPlayer.Builder(application).build();
@@ -96,15 +127,20 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
 //        exoPlayer.setPlayWhenReady(false);
 
         //Building SimpleExoPlayer
-        SimpleExoPlayer simpleExoPlayer = new SimpleExoPlayer.Builder(application).build();
+        simpleExoPlayer = new SimpleExoPlayer.Builder(application).build();
+
         //setting Player to ExoPlayer PlayView
         playerView.setPlayer(simpleExoPlayer);
+
         //creating obj of MediaItem class and providing resource id i.e uri
         MediaItem mediaItem = MediaItem.fromUri(videouri);
+
         //setting media item to Exoplayer
         simpleExoPlayer.addMediaItems(Collections.singletonList(mediaItem));
+
         //preparing SimpleExoPlayer
         simpleExoPlayer.prepare();
+
         //by default, when video is ready to play, we don't play it automatically or not play when video ready play
         simpleExoPlayer.setPlayWhenReady(false);
 
@@ -135,6 +171,7 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
 
     //creating setLikeButtonStatus() for checking video like status
     public void setLikeButtonStatus(final String postKey) {
+
         //finding View id and references
         likeButton = itemView.findViewById(R.id.like_button);
         like_txt = itemView.findViewById(R.id.like_txt);
@@ -147,6 +184,7 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
 
         //getting instance of FirebaseAuth
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
         //getting UID of Current user
         String userId = user.getUid();
 
@@ -177,17 +215,22 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
 
                 //inflicting Drawable Resources and Like ImageView on Database get changes
                 if (snapshot.child(postKey).hasChild(userId)){
+
                     //getting Children Count
                     likeCount = (int)snapshot.child(postKey).getChildrenCount();
+
                     //setting resource to likeButton ImageView
                     likeButton.setImageResource(R.drawable.baseline_like_24);
+
                     //setting count text to TextView
                     like_txt.setText(Integer.toString(likeCount));
                 }else {
                     //getting Children Count
                     likeCount = (int)snapshot.child(postKey).getChildrenCount();
+
                     //setting resource to likeButton ImageView
                     likeButton.setImageResource(R.drawable.baseline_unlike_24);
+
                     //setting count text to TextView
                     like_txt.setText(Integer.toString(likeCount));
                 }
@@ -206,9 +249,11 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
         //finding View id and references
         TextView item_comment_dateTime = itemView.findViewById(R.id.item_comment_dateTime);
         TextView item_comment_lorem = itemView.findViewById(R.id.item_comment_lorem);
+        commentBoxclick = itemView.findViewById(R.id.commentBoxClick);
 
         //setting Date and Time text to item_comment_dateTime
         item_comment_dateTime.setText("Date: "+date+" Time: "+time);
+
         //setting Author name text to item_comment_lorem
         item_comment_lorem.setText("Author: "+userName+"-"+"\n  "+comment);
     }
@@ -219,6 +264,7 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
 
     //creating interface Clicklistener for both onClick and onLongClick event handler
     public interface Clicklistener{
+
         //abstract method for onItemClick and onItemLongClick
         void onItemClick(View view, int position);
         void onItemLongClick(View view, int position);
@@ -226,6 +272,7 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
 
     //creating another setOnClickListener() method and passing VideoViewHolder.Clicklistener clickListener obj
     public void setOnClickListener(VideoViewHolder.Clicklistener clickListener){
+
         //assigning clickListener to mClickListener
         mClickListener = clickListener;
     }

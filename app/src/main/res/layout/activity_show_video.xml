@@ -5,13 +5,18 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ShowVideoActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".ShowVideoActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/recyclerview"
-        tools:listitem="@layout/item_video"/>
+        tools:listitem="@layout/item_video" />
 
 </LinearLayout>

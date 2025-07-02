@@ -70,11 +70,11 @@ public class CommentActivity extends AppCompatActivity {
         });
 
         //ActionBar obj and it's operation
-        ActionBar actionBar = getSupportActionBar();
+       // ActionBar actionBar = getSupportActionBar();
         //if actionBar obj in not null (for handling null pointer error)
-        assert actionBar != null;
+
         //and hiding actionBar for this Activity screen
-        actionBar.hide();
+        //actionBar.hide();
 
         //init Comments DataModel class
         comments = new Comments();
@@ -238,6 +238,14 @@ public class CommentActivity extends AppCompatActivity {
             @Override
             protected void onBindViewHolder(@NonNull VideoViewHolder holder, int position, @NonNull Comments model) {
                 holder.setComments(getApplication(), model.getComment(), model.getDate(), model.getTime(), model.getUserName());
+
+                //Handling commentBoxclick click, instead of throwing to outside of application
+                holder.commentBoxclick.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(CommentActivity.this, "This Comment click: "+model.getUserName(), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @NonNull

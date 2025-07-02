@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Firebase Video Streaming App</string>
-    <string name="aleady_having_account_login">aleady_having_account_login</string>
+    <string name="aleady_having_account_login">Already Having Account..?  <b>Login Here..!!</b></string>
+    <string name="forgot_password_recover">Forgot Password..? <b>Click Here..!!</b></string>
+    <string name="not_having_account_register">Not Having Account..? <b>Start Here..!!</b></string>
+    <string name="very_long_text">ExpandableTextView is an Android library which allows us to easily create a TextView which can expand/collapse when user clicks on it .we can use this feature in many apps such as movie review app or storytelling app and in many other apps.</string>
 </resources>

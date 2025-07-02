@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -8,44 +9,100 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <VideoView
-        android:id="@+id/videoView_main"
-        android:layout_width="match_parent"
-        android:layout_height="230dp"
-        android:layout_gravity="center"
-        android:foregroundGravity="center"
-        android:backgroundTint="@color/black" />
-
-    <EditText
-        android:id="@+id/videoNameEt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:autoText="true"
-        android:backgroundTint="#333232"
-        android:hint="Video Name"
-        android:textColor="@color/white"
-        android:textSize="20sp" />
-
-    <TextView
+    <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:clickable="true"
-        android:onClick="chooseVideo"
-        android:text="Choose Video"
-        android:typeface="serif" />
+        app:cardCornerRadius="10dp"
+        app:cardElevation="10dp"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true">
 
-    <TextView
-        android:layout_width="wrap_content"
+        <VideoView
+            android:id="@+id/videoView_main"
+            android:layout_width="match_parent"
+            android:layout_height="230dp"
+            android:layout_gravity="center"
+            android:backgroundTint="@color/black"
+            android:foregroundGravity="center" />
+
+    </androidx.cardview.widget.CardView>
+
+
+    <!--    <EditText-->
+    <!--        android:id="@+id/videoNameEt"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_margin="10dp"-->
+    <!--        android:autoText="true"-->
+    <!--        android:backgroundTint="#333232"-->
+    <!--        android:hint="Video Name"-->
+    <!--        android:textColor="@color/white"-->
+    <!--        android:textSize="20sp" />-->
+
+    <!--TextInputLayout: Input User Name-->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/nameTil"
+        style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:clickable="true"
-        android:onClick="showVideo"
-        android:text="Show Video"
-        android:typeface="serif" />
+        android:layout_marginTop="10dp"
+        android:hint="Title"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        app:startIconDrawable="@drawable/round_title_24">
+
+        <EditText
+            android:id="@+id/videoNameEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textCapWords" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/descTil"
+        style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="Description"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        app:startIconDrawable="@drawable/baseline_short_text_24">
+
+        <EditText
+            android:id="@+id/videoDescEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <!--    <TextView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        android:clickable="true"-->
+<!--        android:onClick="chooseVideo"-->
+<!--        android:text="Choose Video"-->
+<!--        android:typeface="serif" />-->
+
+<!--    <TextView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        android:clickable="true"-->
+<!--        android:onClick="showVideo"-->
+<!--        android:text="Show Video"-->
+<!--        android:typeface="serif" />-->
 
     <Button
         android:id="@+id/uploadBtn"
@@ -57,12 +114,12 @@
         android:textStyle="bold"
         android:typeface="serif" />
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp" />
+<!--    <ProgressBar-->
+<!--        android:id="@+id/progressBar"-->
+<!--        style="?android:attr/progressBarStyleHorizontal"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="16dp" />-->
 
 
 </LinearLayout>

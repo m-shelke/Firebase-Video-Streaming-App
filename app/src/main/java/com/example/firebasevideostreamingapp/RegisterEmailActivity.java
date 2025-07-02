@@ -2,13 +2,22 @@ package com.example.firebasevideostreamingapp;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
+import android.view.WindowManager;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+import com.example.firebasevideostreamingapp.NewUI.HomeActivity;
 import com.example.firebasevideostreamingapp.databinding.ActivityRegisterEmailBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -35,13 +44,47 @@ public class RegisterEmailActivity extends AppCompatActivity {
         binding = ActivityRegisterEmailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.registerActivity), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            getWindow().setDecorFitsSystemWindows(false);
+            WindowInsetsController controller = getWindow().getInsetsController();
+            if (controller != null) {
+                controller.hide(WindowInsets.Type.statusBars());
+                controller.setSystemBarsBehavior(
+                        WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                );
+            }
+        } else {
+            getWindow().setFlags(
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN
+            );
+        }
+
+
+
+        //Handled Skip button click, and go back.
+//        binding.SkipCv.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                //calling  onBackPressed(); to go back
+//               getOnBackPressedDispatcher().onBackPressed();
+//            }
+//        });
+
         //get instance of firebase auth for Auth related task
         firebaseAuth = FirebaseAuth.getInstance();
 
         //if the user is already log-in, then jumped to MainActivity
         if (firebaseAuth.getCurrentUser() != null){
             //if user log-in directly starting MainActivity
-            startActivity(new Intent(RegisterEmailActivity.this,MainActivity.class));
+            startActivity(new Intent(RegisterEmailActivity.this, HomeActivity.class));
             //and finish this activity here
             finish();
         }
@@ -52,10 +95,18 @@ public class RegisterEmailActivity extends AppCompatActivity {
         progressDialog.setCanceledOnTouchOutside(false);
 
         //handle toolbarBackBtn, go back
-        binding.toolbarBackBtn.setOnClickListener(new View.OnClickListener() {
+//        binding.toolbarBackBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                finish();
+//            }
+//        });
+
+        //handle haveAccountTv click, go back to LoginEmailActivity
+        binding.haveAccountTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+
             }
         });
 
@@ -172,7 +223,7 @@ public class RegisterEmailActivity extends AppCompatActivity {
                         progressDialog.dismiss();
 
 
-                        startActivity(new Intent(RegisterEmailActivity.this, MainActivity.class));
+                        startActivity(new Intent(RegisterEmailActivity.this, HomeActivity.class));
                         finishAffinity();
                     }
                 })
