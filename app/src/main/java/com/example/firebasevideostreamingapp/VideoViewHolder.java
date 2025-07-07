@@ -5,6 +5,7 @@ import static io.github.glailton.expandabletextview.ExpandableTextViewKt.EXPAND_
 import android.app.Application;
 import android.net.Uri;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -44,6 +45,7 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
     public ImageButton likeButton,commentImg,downloadBtn;
     TextView like_txt,commentCountTv;
     public LinearLayout commentBoxclick;
+    public Button deleteComment,editComment;
 
     //likeCount variable for integer value count
     int likeCount,commentCount;
@@ -249,13 +251,19 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
         //finding View id and references
         TextView item_comment_dateTime = itemView.findViewById(R.id.item_comment_dateTime);
         TextView item_comment_lorem = itemView.findViewById(R.id.item_comment_lorem);
+        TextView item_comment_author = itemView.findViewById(R.id.item_comment_author);
         commentBoxclick = itemView.findViewById(R.id.commentBoxClick);
+        deleteComment = itemView.findViewById(R.id.deleteComment);
+        editComment = itemView.findViewById(R.id.editComment);
 
         //setting Date and Time text to item_comment_dateTime
         item_comment_dateTime.setText("Date: "+date+" Time: "+time);
 
+        //setting Author name to Comment Author TextView
+        item_comment_author.setText("Author: "+userName);
+
         //setting Author name text to item_comment_lorem
-        item_comment_lorem.setText("Author: "+userName+"-"+"\n  "+comment);
+        item_comment_lorem.setText(comment);
     }
 
     //calling interface Clicklistener and init obj

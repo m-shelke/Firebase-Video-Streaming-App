@@ -3,7 +3,7 @@ package com.example.firebasevideostreamingapp;
 public class Comments {
 
     //Firebase variable
-    String comment, date,time,userName;
+    String comment, date, time, userName,uid;
 
     public Comments() {
     }
@@ -11,6 +11,14 @@ public class Comments {
     //Getters and Setters
     public String getComment() {
         return comment;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public void setComment(String comment) {
