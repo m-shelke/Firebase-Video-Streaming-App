@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:expandableTextView="http://schemas.android.com/tools"
     app:cardCornerRadius="10dp"
     app:cardElevation="10dp"
     app:cardPreventCornerOverlap="true"
@@ -36,17 +37,41 @@
             android:typeface="normal" />
 
 
-        <TextView
-            android:id="@+id/item_comment_lorem"
+<!--        <TextView-->
+<!--            android:id="@+id/item_comment_lorem"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="3dp"-->
+<!--            android:paddingLeft="50dp"-->
+<!--            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."-->
+<!--            android:textAlignment="textStart"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:textSize="16sp"-->
+<!--            android:typeface="serif" />-->
+
+
+        <io.github.glailton.expandabletextview.ExpandableTextView
+            android:id="@+id/item_ExpandableTv12"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:paddingLeft="50dp"
-            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-            android:textAlignment="textStart"
-            android:textColor="@color/white"
+            style="@style/TextAppearance.AppCompat.Body1"
+            android:clickable="true"
             android:textSize="16sp"
-            android:typeface="serif" />
+            android:typeface="serif"
+            android:textColor="@color/white"
+            android:textAlignment="textStart"
+            android:paddingLeft="50dp"
+            android:layout_marginTop="3dp"
+            app:isUnderlined="false"
+            app:collapsedLines="4"
+            android:text="@string/very_long_text"
+            app:layout_goneMarginTop="4dp"
+            expandableTextView:fadeAnimationEnabled="true" />
+
+
+
+
+
 
 
         <Button

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Firebase Video Streaming App</string>
+    <string name="app_name">Streamy</string>
     <string name="aleady_having_account_login">Already Having Account..?  <b>Login Here..!!</b></string>
     <string name="forgot_password_recover">Forgot Password..? <b>Click Here..!!</b></string>
     <string name="not_having_account_register">Not Having Account..? <b>Start Here..!!</b></string>

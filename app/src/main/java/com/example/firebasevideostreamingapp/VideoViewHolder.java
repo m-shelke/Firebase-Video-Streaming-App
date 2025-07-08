@@ -1,6 +1,7 @@
 package com.example.firebasevideostreamingapp;
 
 import static io.github.glailton.expandabletextview.ExpandableTextViewKt.EXPAND_TYPE_LAYOUT;
+import static io.github.glailton.expandabletextview.ExpandableTextViewKt.EXPAND_TYPE_POPUP;
 
 import android.app.Application;
 import android.net.Uri;
@@ -35,6 +36,8 @@ import io.github.glailton.expandabletextview.ExpandableTextView;
 //VideoViewHolder class for getting the References of Layout File
 public class VideoViewHolder extends RecyclerView.ViewHolder {
 
+    ExpandableTextView expandableTextView12;
+
     //Layout Variable
     SimpleExoPlayer simpleExoPlayer;
 
@@ -52,6 +55,7 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
 
     //Database instance
     DatabaseReference reference,postReference;
+
 
     //Matching super constructor
     public VideoViewHolder(@NonNull View itemView) {
@@ -250,11 +254,13 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
 
         //finding View id and references
         TextView item_comment_dateTime = itemView.findViewById(R.id.item_comment_dateTime);
-        TextView item_comment_lorem = itemView.findViewById(R.id.item_comment_lorem);
+       // TextView item_comment_lorem = itemView.findViewById(R.id.item_comment_lorem);
         TextView item_comment_author = itemView.findViewById(R.id.item_comment_author);
         commentBoxclick = itemView.findViewById(R.id.commentBoxClick);
         deleteComment = itemView.findViewById(R.id.deleteComment);
         editComment = itemView.findViewById(R.id.editComment);
+
+        expandableTextView12 = itemView.findViewById(R.id.item_ExpandableTv12);
 
         //setting Date and Time text to item_comment_dateTime
         item_comment_dateTime.setText("Date: "+date+" Time: "+time);
@@ -262,8 +268,19 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
         //setting Author name to Comment Author TextView
         item_comment_author.setText("Author: "+userName);
 
+
+        expandableTextView12
+                .setAnimationDuration(500)
+                .setReadMoreText("View More")
+                .setReadLessText("View Less")
+                .setCollapsedLines(4)
+                .setIsExpanded(false)
+                .setIsUnderlined(true)
+                .setExpandType(EXPAND_TYPE_POPUP)
+                .setEllipsizedTextColor(ContextCompat.getColor(application, R.color.blue));
+
         //setting Author name text to item_comment_lorem
-        item_comment_lorem.setText(comment);
+        expandableTextView12.setText(comment);
     }
 
     //calling interface Clicklistener and init obj

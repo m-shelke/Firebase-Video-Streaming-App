@@ -1,5 +1,8 @@
 package com.example.firebasevideostreamingapp;
 
+import static io.github.glailton.expandabletextview.ExpandableTextViewKt.EXPAND_TYPE_LAYOUT;
+
+import android.app.Application;
 import android.app.Dialog;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,6 +17,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -310,6 +314,7 @@ public class CommentActivity extends AppCompatActivity {
                 });
 
 
+
                 //init FirebaseUser and FirebaseAuth to get current User ID
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 //for getting current UserID
@@ -393,6 +398,8 @@ public class CommentActivity extends AppCompatActivity {
 
                                                         dialog.dismiss();
                                                         Toast.makeText(CommentActivity.this, "Comment Update", Toast.LENGTH_SHORT).show();
+
+                                                        holder.setComments(getApplication(),model.getComment(),model.getDate(),model.getTime(),model.getUserName());
                                                     }
                                                 })
                                                 .addOnFailureListener(new OnFailureListener() {
@@ -442,4 +449,5 @@ public class CommentActivity extends AppCompatActivity {
         binding.commentRecyclerView.setAdapter(firebaseRecyclerAdapter);
 
     }
+
 }
