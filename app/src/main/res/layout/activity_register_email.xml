@@ -2,77 +2,157 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:id="@+id/registerActivity"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context=".RegisterEmailActivity">
 
-<!--    <RelativeLayout-->
-<!--        android:id="@+id/toolbarRL"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="55dp">-->
+    <!--    <RelativeLayout-->
+    <!--        android:id="@+id/toolbarRL"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="55dp">-->
 
-<!--        &lt;!&ndash; ImageView: click to go back&ndash;&gt;-->
-<!--        <ImageButton-->
-<!--            android:id="@+id/toolbarBackBtn"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_centerVertical="true"-->
-<!--            android:background="@android:color/transparent"-->
-<!--            android:padding="10dp"-->
-<!--            android:src="@drawable/baseline_arrow_back_ios_24" />-->
+    <!--        &lt;!&ndash; ImageView: click to go back&ndash;&gt;-->
+    <!--        <ImageButton-->
+    <!--            android:id="@+id/toolbarBackBtn"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_centerVertical="true"-->
+    <!--            android:background="@android:color/transparent"-->
+    <!--            android:padding="10dp"-->
+    <!--            android:src="@drawable/baseline_arrow_back_ios_24" />-->
 
-<!--        &lt;!&ndash;TextView: Toolbar Title&ndash;&gt;-->
-<!--        <TextView-->
-<!--            android:id="@+id/toolbarTitleTv"-->
-<!--            style="@style/TextAppearance.MaterialComponents.Body1"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_centerVertical="true"-->
-<!--            android:layout_toEndOf="@id/toolbarBackBtn"-->
-<!--            android:text="Register" />-->
+    <!--        &lt;!&ndash;TextView: Toolbar Title&ndash;&gt;-->
+    <!--        <TextView-->
+    <!--            android:id="@+id/toolbarTitleTv"-->
+    <!--            style="@style/TextAppearance.MaterialComponents.Body1"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_centerVertical="true"-->
+    <!--            android:layout_toEndOf="@id/toolbarBackBtn"-->
+    <!--            android:text="Register" />-->
 
-<!--        &lt;!&ndash;View: To make Toolbar look separate from other UI &ndash;&gt;-->
-<!--        <View-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="1dp"-->
-<!--            android:layout_alignParentBottom="true"-->
-<!--            android:background="@color/black" />-->
+    <!--        &lt;!&ndash;View: To make Toolbar look separate from other UI &ndash;&gt;-->
+    <!--        <View-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="1dp"-->
+    <!--            android:layout_alignParentBottom="true"-->
+    <!--            android:background="@color/black" />-->
 
-<!--    </RelativeLayout>-->
+    <!--    </RelativeLayout>-->
+
+
+    <!-- ShapeableImageView: Just to show a static image (drawable.account) from drawable-->
+    <!--        <com.google.android.material.imageview.ShapeableImageView-->
+    <!--            android:id="@+id/profileIv"-->
+    <!--            android:layout_width="70dp"-->
+    <!--            android:layout_height="70dp"-->
+    <!--            android:layout_centerHorizontal="true"-->
+    <!--            android:background="#D1C4E9"-->
+    <!--            android:padding="1dp"-->
+    <!--            android:src="@drawable/baseline_person_4_24"-->
+    <!--            app:shapeAppearanceOverlay="@style/ImageStyle_Corner_Rounded" />-->
+
 
     <RelativeLayout
+        android:id="@id/profileRl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:padding="10dp">
 
-        <!-- ShapeableImageView: Just to show a static image (drawable.account) from drawable-->
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/profileIv"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_centerHorizontal="true"
-            android:background="#D1C4E9"
-            android:padding="1dp"
-            android:src="@drawable/baseline_person_4_24"
-            app:shapeAppearanceOverlay="@style/ImageStyle_Corner_Rounded" />
+        <RelativeLayout
+            android:id="@+id/profileRl"
+            android:layout_width="280dp"
+            android:layout_height="160dp"
+            android:layout_centerHorizontal="true">
 
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
+                app:cardCornerRadius="130dp">
+
+
+                <!--ShapeableImageView: to show image picked from Camera/Gallery or from Database -->
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/profileImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
+                    android:fitsSystemWindows="true"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/person" />
+
+            </androidx.cardview.widget.CardView>
+
+            <!--FloatingActionButton: to pick image from Camera/Gallery-->
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/profileImagePickFab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:backgroundTint="#7A58B4"
+                android:src="@drawable/baseline_photo_camera_24"
+                android:tint="@color/black"
+                app:fabSize="mini" />
+
+        </RelativeLayout>
 
         <!-- TextView: Just to show Liable text-->
         <TextView
             android:id="@+id/registerLableTv"
             style="@style/TextAppearance.MaterialComponents.Subtitle1"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/profileIv"
-            android:typeface="serif"
-            android:textStyle="bold"
+            android:layout_below="@id/profileRl"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
-            android:padding="5dp"
+            android:padding="0dp"
+            android:text="Profile Information"
+            android:textAlignment="center"
             android:textSize="20sp"
-            android:text="Create New Account" />
+            android:textStyle="bold|normal"
+            android:typeface="serif" />
+
+        <TextView
+            android:id="@+id/requestTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/registerLableTv"
+            android:text="Please set your Name and Profile Image"
+            android:textAlignment="center"
+            android:textSize="13sp"
+            android:typeface="serif" />
+
+
+        <!--TextInputLayout: Input User Name-->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/nameTil"
+            style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/requestTV"
+            android:layout_marginTop="10dp"
+            android:hint="Name"
+            app:boxCornerRadiusBottomEnd="8dp"
+            app:boxCornerRadiusBottomStart="8dp"
+            app:boxCornerRadiusTopEnd="8dp"
+            app:boxCornerRadiusTopStart="8dp"
+            app:startIconDrawable="@drawable/baseline_person_24">
+
+            <EditText
+                android:id="@+id/nameEd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
 
         <!--TextInputLayout: Input user email from register -->
@@ -80,7 +160,7 @@
             android:id="@+id/emaTil"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/registerLableTv"
+            android:layout_below="@id/nameTil"
             android:layout_marginTop="10dp"
             android:hint="Email"
             app:boxCornerRadiusBottomEnd="8dp"
@@ -97,7 +177,7 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-         <!--TextInputLayout: Input user password from register -->
+        <!--TextInputLayout: Input user password from register -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/passwordTil"
             android:layout_width="match_parent"
@@ -148,9 +228,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/cPasswordTil"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="10dp"
             android:text="@string/aleady_having_account_login" />
-
 
 
         <!-- MaterialButton: clicked to register user. -->
@@ -161,36 +240,36 @@
             android:layout_alignParentBottom="true"
             android:minHeight="60dp"
             android:text="Register"
-            android:typeface="serif"
             android:textStyle="bold"
+            android:typeface="serif"
             app:cornerRadius="8dp" />
-
 
 
     </RelativeLayout>
 
-<!--    <androidx.cardview.widget.CardView-->
-<!--        android:id="@+id/SkipCv"-->
-<!--        android:layout_width="60dp"-->
-<!--        android:layout_height="35dp"-->
-<!--        android:layout_alignParentEnd="true"-->
-<!--        android:layout_marginTop="0dp"-->
-<!--        android:layout_marginEnd="8dp"-->
-<!--        android:clickable="true"-->
-<!--        android:focusable="true"-->
-<!--        android:foreground="?selectableItemBackground"-->
-<!--        app:cardCornerRadius="10dp">-->
+    <!--    <androidx.cardview.widget.CardView-->
+    <!--        android:id="@+id/SkipCv"-->
+    <!--        android:layout_width="60dp"-->
+    <!--        android:layout_height="35dp"-->
+    <!--        android:layout_alignParentEnd="true"-->
+    <!--        android:layout_marginTop="0dp"-->
+    <!--        android:layout_marginEnd="8dp"-->
+    <!--        android:clickable="true"-->
+    <!--        android:focusable="true"-->
+    <!--        android:foreground="?selectableItemBackground"-->
+    <!--        app:cardCornerRadius="10dp">-->
 
 
-<!--        <TextView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:drawableStart="@drawable/round_close_24"-->
-<!--            android:gravity="center_vertical"-->
-<!--            android:typeface="serif"-->
-<!--            android:text="Skip" />-->
+    <!--        <TextView-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            android:drawableStart="@drawable/round_close_24"-->
+    <!--            android:gravity="center_vertical"-->
+    <!--            android:typeface="serif"-->
+    <!--            android:text="Skip" />-->
 
-<!--    </androidx.cardview.widget.CardView>-->
+    <!--    </androidx.cardview.widget.CardView>-->
 
 
 </RelativeLayout>
+

@@ -146,7 +146,7 @@ public class CommentActivity extends AppCompatActivity {
         String userId = user.getUid();
 
         //getting "UserName" Database Reference
-        reference = FirebaseDatabase.getInstance().getReference().child("UserName");
+        reference = FirebaseDatabase.getInstance().getReference().child("VideoUsers");
 
         //creating another Database Reference inside of below path "Comments"
         postReference = FirebaseDatabase.getInstance().getReference().child("Video").child(postKey).child("Comments");
@@ -178,7 +178,7 @@ public class CommentActivity extends AppCompatActivity {
                         if (snapshot.exists()) {
 
                             //Getting value of this JSON key ""userName")" inside variable
-                            String userName = snapshot.child("userName").getValue().toString();
+                            String userName = snapshot.child("name").getValue().toString();
 
                             //calling  commentFeatures(userName); and passing String userName
                             commentFeatures(userName);

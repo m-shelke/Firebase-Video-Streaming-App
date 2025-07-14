@@ -224,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
                                 databaseReference.child(i).setValue(video);
                             }else {
                                 //showing Toast message, when Video is not uploaded
-                                Toast.makeText(MainActivity.this, "Video Failed", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, "Video Uploading Failed", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });

@@ -85,6 +85,13 @@ dependencies {
     //Expandable TextView Dependency
     implementation("io.github.glailton.expandabletextview:expandabletextview:1.0.4")
 
+    //Circular ImageView Dependency
+    implementation ("de.hdodenhof:circleimageview:3.1.0")
+
+    //glide library
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
+
 
 
     //    ExoPlayer dependency
