@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NewUI.ProfileEditActivity">
+
+    <RelativeLayout
+        android:id="@id/profileRl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:padding="10dp"
+        android:gravity="center"
+        android:foregroundGravity="center"
+        android:layout_centerHorizontal="true">
+
+
+    <RelativeLayout
+        android:id="@+id/profileRl"
+        android:layout_width="280dp"
+        android:layout_height="160dp"
+        android:gravity="center_vertical"
+        android:foregroundGravity="center"
+        android:layout_centerHorizontal="true">
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:foregroundGravity="center"
+            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true"
+            app:cardCornerRadius="130dp">
+
+
+            <!--ShapeableImageView: to show image picked from Camera/Gallery or from Database -->
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/updateProfileImg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_vertical"
+                android:foregroundGravity="center_vertical"
+                android:fitsSystemWindows="true"
+                android:scaleType="centerCrop"/>
+
+        </androidx.cardview.widget.CardView>
+
+        <!--FloatingActionButton: to pick image from Camera/Gallery-->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/updateProfileImagePickFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:backgroundTint="#7A58B4"
+            android:src="@drawable/baseline_photo_camera_24"
+            android:tint="@color/black"
+            app:fabSize="mini" />
+
+    </RelativeLayout>
+
+    <!-- TextView: Just to show Liable text-->
+    <TextView
+        android:id="@+id/updateLableTv"
+        style="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/profileRl"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:padding="0dp"
+        android:text="Manage Details"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="bold|normal"
+        android:typeface="serif" />
+
+    <TextView
+        android:id="@+id/requestTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/updateLableTv"
+        android:text="Keep your profile up to date for a better experience"
+        android:textAlignment="center"
+        android:textSize="13sp"
+        android:typeface="serif" />
+
+
+    <!--TextInputLayout: Input User Name-->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/nameTil"
+        style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/requestTV"
+        android:layout_marginTop="10dp"
+        android:hint="Name"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        app:startIconDrawable="@drawable/baseline_person_24">
+
+        <EditText
+            android:id="@+id/updateNameEd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textCapWords" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- MaterialButton: clicked to register user. -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/updateBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/nameTil"
+        android:layout_marginTop="10dp"
+        android:minHeight="60dp"
+        android:text="Update"
+        android:textStyle="bold"
+        android:typeface="serif"
+        app:cornerRadius="8dp" />
+
+</RelativeLayout>
+
+</RelativeLayout>

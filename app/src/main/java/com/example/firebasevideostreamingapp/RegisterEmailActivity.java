@@ -250,6 +250,7 @@ public class RegisterEmailActivity extends AppCompatActivity {
                 .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+
                         double progress=(100.0*snapshot.getBytesTransferred()) /snapshot.getTotalByteCount();
                         Log.d(TAG, "onProgress: Process: "+progress);
 

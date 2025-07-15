@@ -1,20 +1,19 @@
 package com.example.firebasevideostreamingapp.NewUI;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -23,11 +22,11 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
-import com.example.firebasevideostreamingapp.ProfileActivity;
 import com.example.firebasevideostreamingapp.R;
-import com.example.firebasevideostreamingapp.RegisterEmailActivity;
 import com.example.firebasevideostreamingapp.Video;
 import com.example.firebasevideostreamingapp.databinding.FragmentAccountBinding;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -40,31 +39,31 @@ import java.util.Objects;
 
 public class AccountFragment extends Fragment {
 
-    private FragmentAccountBinding binding;
-    private FirebaseAuth firebaseAuth;
-    private Context mContext;
-
+    private static final String TAG = "AccountFragment";
     //Firebase Database reference
     DatabaseReference reference;
     //obj of Video DataModel class
     Video video;
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        //get and init Context for this Fragment class
-        mContext=context;
-        super.onAttach(context);
-    }
+    private FragmentAccountBinding binding;
+    private FirebaseAuth firebaseAuth;
+    private Context mContext;
+    private ProgressDialog progressDialog;
 
     public AccountFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        //get and init Context for this Fragment class
+        mContext = context;
+        super.onAttach(context);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding=FragmentAccountBinding.inflate(LayoutInflater.from(mContext),container,false);
+        binding = FragmentAccountBinding.inflate(LayoutInflater.from(mContext), container, false);
         return binding.getRoot();
     }
 
@@ -72,8 +71,15 @@ public class AccountFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
+        //init/setup ProgressDialog to while Account Verification
+        progressDialog = new ProgressDialog(mContext);
+        progressDialog.setTitle("Please Wait..");
+        progressDialog.setCanceledOnTouchOutside(false);
+
+
         //get instance of the firebase auth for Auth related task
-        firebaseAuth=FirebaseAuth.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
 
 
         //init FirebaseAuth and FirebaseUser
@@ -91,29 +97,30 @@ public class AccountFragment extends Fragment {
         //creating "UserName" reference in Firebase Database
         reference = FirebaseDatabase.getInstance().getReference().child("VideoUsers");
 
+        loadMyInfo();
 
 
 
-        reference.child(userId)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                        String profileImageUrl=""+snapshot.child("image").getValue();
-                        Log.e("profileImage",profileImageUrl );
-
-                        String name=""+snapshot.child("name").getValue();
-                        binding.userNameTV.setText(name);
-
-                        Glide.with(mContext).load(profileImageUrl).placeholder(R.drawable.baseline_more_horiz_24).into(binding.userProfileIv);
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
+//        reference.child(userId)
+//                .addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//
+//                        String profileImageUrl = "" + snapshot.child("image").getValue();
+//                        Log.e("profileImage", profileImageUrl);
+//
+//                        String name = "" + snapshot.child("name").getValue();
+//                        binding.userNameTV.setText(name);
+//
+//                        Glide.with(mContext).load(profileImageUrl).placeholder(R.drawable.baseline_more_horiz_24).into(binding.userProfileIv);
+//
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
 
         //saving data that user enter to Firebase Realtime Database
 //        binding.saveBtn.setOnClickListener(new View.OnClickListener() {
@@ -159,7 +166,53 @@ public class AccountFragment extends Fragment {
 
                 //start MainActivity
                 startActivity(new Intent(mContext, EmailLoginActivity.class));
-                getActivity().finishAffinity();
+                requireActivity().finishAffinity();
+            }
+        });
+
+
+        binding.editProfileBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                startActivity(new Intent(mContext, ProfileEditActivity.class));
+            }
+        });
+
+
+        binding.verifyAccountBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                verifyAccount();
+            }
+        });
+
+
+        //Handle changepasswordBtn click, start ChangePasswordActivity
+        binding.changePasswordBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(mContext, ChangePasswordActivity.class));
+            }
+        });
+
+     //  handling referredBtn button event
+        binding.refferedBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_TEXT,"Referred this App for Unlimited Streaming Videos");
+                startActivity(Intent.createChooser(intent,"Thank You.."));
+            }
+        });
+
+        //Handle deleteAccountBtn click, Start DeleteAccountActivity
+        binding.deleteAccountBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(mContext, DeleteAccountActivity.class));
+                getActivity().finishAffinity(); //remove all activities from back-stack because, we delete user and it's data, so it may produced null exception if we don't remove it
             }
         });
     }
@@ -168,6 +221,13 @@ public class AccountFragment extends Fragment {
     //Retrieving Name of User from Firebase Database
     @Override
     public void onStart() {
+
+        loadMyInfo();
+
+        super.onStart();
+    }
+
+    private void loadMyInfo() {
 
         //init FirebaseAuth and FirebaseUser
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -185,16 +245,16 @@ public class AccountFragment extends Fragment {
 
                 Profile profile = snapshot.getValue(Profile.class);
 
-              //  String profileImg=""+snapshot.child("imageUrl").getValue();
+                //  String profileImg=""+snapshot.child("imageUrl").getValue();
 
-                    //getting "userName" value form Firebase Database
-                  //  String userName = snapshot.child("name").getValue().toString();
+                //getting "userName" value form Firebase Database
+                //  String userName = snapshot.child("name").getValue().toString();
 
-                    //and set it to binding.userName
+                //and set it to binding.userName
                 assert profile != null;
                 binding.userNameTV.setText(profile.getName());
 
-                    binding.userEmailTv.setText(profile.getEmail());
+                binding.userEmailTv.setText(profile.getEmail());
 
                 try {
 
@@ -220,16 +280,80 @@ public class AccountFragment extends Fragment {
                             .into(binding.userProfileIv);
 
 
-                }catch (Exception e){
-                    Toast.makeText(mContext, "Image Fetching Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    Toast.makeText(mContext, "Image Fetching Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(mContext, "Data Fetching Error: "+error.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "Data Fetching Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-        super.onStart();
+
+
+//       FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+//
+//
+//
+//        //User type is Email, have to check if verified or not
+//        boolean isVerified= firebaseUser.isEmailVerified();
+//
+//
+//        if (isVerified){
+//            //verified, hide the Verify Account Option
+////            binding.verifyAccountBtn.setVisibility(View.GONE);
+////            binding.verificationIv.setVisibility(View.VISIBLE);
+//
+//            binding.demo.setText("Verified");
+//        }else {
+//            //not verified, show the Verify Account Option
+////            binding.verifyAccountBtn.setVisibility(View.VISIBLE);
+////            binding.verificationIv.setVisibility(View.GONE);
+//
+//            binding.demo.setText("Not Verified");
+//        }
+
+        user.reload().addOnCompleteListener(task -> {
+            if (user.isEmailVerified()) {
+                binding.verificationIv.setVisibility(View.VISIBLE);
+                binding.verifyAccountBtn.setVisibility(View.GONE);
+            } else {
+                binding.verificationIv.setVisibility(View.GONE);
+                binding.verifyAccountBtn.setVisibility(View.VISIBLE);
+            }
+        });
+
     }
+
+
+    private void verifyAccount() {
+        Log.d(TAG, "verifyAccount: ");
+        //show progressDialog
+        progressDialog.setMessage("Sending Account Verification Instruction To Your Email ");
+        progressDialog.show();
+        //send account/email verification instruction to the registered email
+        Objects.requireNonNull(firebaseAuth.getCurrentUser()).sendEmailVerification()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    //instruction send, check email, sometimes it goes to the spam folder so if not into inbox please check the spam folder
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d(TAG, "onSuccess: ");
+                        progressDialog.dismiss();
+                        Toast.makeText(mContext, "Account Verification Mail Send To Your Email ", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        //failed to send instruction
+                        Log.e(TAG, "onFailure: ", e);
+                        progressDialog.dismiss();
+                        Toast.makeText(mContext, "Account Verification Mail Failed; " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+
 }
