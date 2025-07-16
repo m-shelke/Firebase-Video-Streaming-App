@@ -19,6 +19,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.bumptech.glide.Glide;
 import com.example.firebasevideostreamingapp.R;
 import com.example.firebasevideostreamingapp.RegisterEmailActivity;
 import com.example.firebasevideostreamingapp.databinding.ActivityEmailLoginBinding;
@@ -53,6 +54,11 @@ public class EmailLoginActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+//        Glide.with(this)
+//                .asGif()
+//                .load(R.drawable.login)
+//                .into(binding.loginGif);
 
 
 

@@ -72,15 +72,15 @@
         android:padding="10dp">
 
         <!-- ShapeableImageView: Just to show a static image (drawable.account) from drawable-->
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/profileIv"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_centerHorizontal="true"
-            android:background="#D1C4E9"
-            android:padding="1dp"
-            android:src="@drawable/baseline_account_box_24"
-            app:shapeAppearanceOverlay="@style/ImageStyle_Corner_Rounded" />
+<!--        <com.google.android.material.imageview.ShapeableImageView-->
+<!--            android:id="@+id/profileIv"-->
+<!--            android:layout_width="70dp"-->
+<!--            android:layout_height="70dp"-->
+<!--            android:layout_centerHorizontal="true"-->
+<!--            android:background="#D1C4E9"-->
+<!--            android:padding="1dp"-->
+<!--            android:src="@drawable/baseline_account_box_24"-->
+<!--            app:shapeAppearanceOverlay="@style/ImageStyle_Corner_Rounded" />-->
 
         <!-- TextView: Just to show Liable text-->
 <!--        <TextView-->
@@ -94,6 +94,21 @@
 <!--            android:padding="5dp"-->
 <!--            android:text="Login To Your Account" />-->
 
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@+id/login_gif"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/login"
+            android:layout_centerHorizontal="true"/>
+
+<!--        <ImageView-->
+<!--            android:layout_width="150dp"-->
+<!--            android:layout_height="150dp"-->
+<!--            android:layout_centerHorizontal="true"-->
+<!--            android:id="@+id/login_gif"-->
+<!--            android:src="@drawable/login"-->
+<!--            android:background="@android:color/transparent"-->
+<!--            android:backgroundTint="@android:color/transparent"/>-->
 
         <!-- TextView: Just to show Liable text-->
         <TextView
@@ -101,12 +116,10 @@
             style="@style/TextAppearance.MaterialComponents.Subtitle1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/profileIv"
+            android:layout_below="@id/login_gif"
             android:typeface="serif"
             android:textStyle="bold"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:padding="5dp"
             android:textSize="20sp"
             android:text="Login To Your Account" />
 
@@ -166,6 +179,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/password_Til"
             android:layout_marginTop="10dp"
+            android:clickable="true"
+            android:focusable="true"
             android:text="@string/not_having_account_register"/>
 
         <TextView

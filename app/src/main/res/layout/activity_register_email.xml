@@ -229,6 +229,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/cPasswordTil"
             android:layout_marginTop="10dp"
+            android:clickable="true"
+            android:focusable="true"
             android:text="@string/aleady_having_account_login" />
 
 

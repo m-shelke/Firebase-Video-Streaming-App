@@ -1,4 +1,3 @@
-
 plugins {
     alias(libs.plugins.android.application)
 
@@ -63,7 +62,7 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
 
     // FirebaseUI for Firebase Realtime Database
-    implementation ("com.firebaseui:firebase-ui-database:7.1.1")
+    implementation("com.firebaseui:firebase-ui-database:7.1.1")
 
 
     // Add the dependencies for any other desired Firebase products
@@ -80,26 +79,26 @@ dependencies {
     implementation("com.google.android.exoplayer:exoplayer-ui:$version_exoplayer")
 
     //Picasso library
-    implementation ("com.squareup.picasso:picasso:2.8")
+    implementation("com.squareup.picasso:picasso:2.8")
 
     //Expandable TextView Dependency
     implementation("io.github.glailton.expandabletextview:expandabletextview:1.0.4")
 
     //Circular ImageView Dependency
-    implementation ("de.hdodenhof:circleimageview:3.1.0")
+    implementation("de.hdodenhof:circleimageview:3.1.0")
 
     //glide library
-    implementation ("com.github.bumptech.glide:glide:4.16.0")
-    annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
 
+    // GIF dependency
+    implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.29")
 
 
     //    ExoPlayer dependency
 //    implementation("androidx.media3:media3-exoplayer:1.5.0")
 //    implementation("androidx.media3:media3-exoplayer-dash:1.5.0")
 //    implementation("androidx.media3:media3-ui:1.5.0")
-
-
 
 
 }

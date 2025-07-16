@@ -202,8 +202,8 @@ public class AccountFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
-                intent.putExtra(Intent.EXTRA_TEXT,"Referred this App for Unlimited Streaming Videos");
-                startActivity(Intent.createChooser(intent,"Thank You.."));
+                intent.putExtra(Intent.EXTRA_TEXT,"https://github.com/m-shelke/XO-Game/releases/tag/Online_OX-1.0.0");
+                startActivity(Intent.createChooser(intent,"Choose Sharing Option: "));
             }
         });
 
@@ -212,7 +212,7 @@ public class AccountFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(mContext, DeleteAccountActivity.class));
-                getActivity().finishAffinity(); //remove all activities from back-stack because, we delete user and it's data, so it may produced null exception if we don't remove it
+               // getActivity().finishAffinity(); //remove all activities from back-stack because, we delete user and it's data, so it may produced null exception if we don't remove it
             }
         });
     }

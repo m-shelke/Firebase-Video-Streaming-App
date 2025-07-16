@@ -15,15 +15,22 @@
         android:layout_marginTop="30dp">
 
         <!-- ShapeableImageView: Just to show a static image (drawable.account) from drawable-->
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/deleteAccountIv"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_centerHorizontal="true"
-            android:background="#D1C4E9"
-            android:padding="1dp"
-            android:src="@drawable/baseline_delete_sweep_24"
-            app:shapeAppearanceOverlay="@style/ImageStyle_Corner_Rounded"/>
+<!--        <com.google.android.material.imageview.ShapeableImageView-->
+<!--            android:id="@+id/deleteAccountIv"-->
+<!--            android:layout_width="70dp"-->
+<!--            android:layout_height="70dp"-->
+<!--            android:layout_centerHorizontal="true"-->
+<!--            android:background="#D1C4E9"-->
+<!--            android:padding="1dp"-->
+<!--            android:src="@drawable/baseline_delete_sweep_24"-->
+<!--            app:shapeAppearanceOverlay="@style/ImageStyle_Corner_Rounded"/>-->
+
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@+id/delete_gif"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/delete"
+            android:layout_centerHorizontal="true"/>
 
         <!-- TextView: Just to show Lable text-->
         <TextView
@@ -31,11 +38,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:padding="5dp"
             android:textAlignment="center"
             android:text="Are You Sure..!!\nYou Want To Delete Your Account Including App Data..? You Will Not Able To Access Your Account Again..!! "
-            android:layout_below="@id/deleteAccountIv"
+            android:layout_below="@id/delete_gif"
             style="@style/TextAppearance.MaterialComponents.Subtitle1"/>
 
         <!-- MaterialButton: clicked to submit new password user info. -->
