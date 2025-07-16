@@ -51,6 +51,8 @@
             android:layout_alignParentBottom="true"
             app:cornerRadius="8dp"
             android:minHeight="60dp"
+            android:textStyle="bold"
+            android:typeface="serif"
             android:text="Confirm Delete"/>
 
     </RelativeLayout>

@@ -1,15 +1,27 @@
 package com.example.firebasevideostreamingapp.NewUI;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.OvershootInterpolator;
+import android.widget.MediaController;
 import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -26,10 +38,17 @@ import com.example.firebasevideostreamingapp.databinding.ActivityHomeBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Map;
+
 public class HomeActivity extends AppCompatActivity {
 
     //ViewBinding class
     ActivityHomeBinding binding;
+
+    Float translationYaxis = 100f;
+    boolean isMenuOpen = false;
+    private static final String TAG = "HOME_ACTIVITY";
+    OvershootInterpolator interpolator = new OvershootInterpolator();
 
     //instance of FirebaseAuth
     private FirebaseAuth firebaseAuth;
@@ -69,11 +88,14 @@ public class HomeActivity extends AppCompatActivity {
         //by default (when app is open) show HomeFragment
         showHomeFragment();
 
+        showMenu();
+
         binding.sellFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                chooseVideo(v);
+                showMenu();
+              //  chooseVideo(v);
 
             }
         });
@@ -181,4 +203,250 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(new Intent(HomeActivity.this, EmailLoginActivity.class));
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    private void showMenu() {
+
+        binding.cameraFab.setAlpha(0f);
+        binding.fileFab.setAlpha(0f);
+
+        binding.cameraFab.setTranslationY(translationYaxis);
+        binding.fileFab.setTranslationY(translationYaxis);
+
+        binding.sellFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (isMenuOpen){
+                    closeMenu();
+                }else {
+                    openMenu();
+                }
+            }
+        });
+
+
+        binding.cameraFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getFromCamera();
+                Toast.makeText(HomeActivity.this, "Camera Clicked", Toast.LENGTH_SHORT).show();
+                closeMenu();
+            }
+        });
+
+        binding.fileFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getFromGallery();
+                Toast.makeText(HomeActivity.this, "File Storage Clicked", Toast.LENGTH_SHORT).show();
+                closeMenu();
+            }
+        });
+
+    }
+
+    private void openMenu() {
+
+        isMenuOpen = !isMenuOpen;
+        binding.sellFab.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);
+        binding.fileFab.animate().translationY(0f).alpha(1f).setInterpolator(interpolator).setDuration(300).start();
+        binding.cameraFab.animate().translationY(0f).alpha(1f).setInterpolator(interpolator).setDuration(300).start();
+    }
+
+    private void closeMenu() {
+
+        isMenuOpen = !isMenuOpen;
+        binding.sellFab.setImageResource(R.drawable.round_add_24);
+        binding.cameraFab.animate().translationY(translationYaxis).alpha(0f).setInterpolator(interpolator).setDuration(300).start();
+        binding.fileFab.animate().translationY(translationYaxis).alpha(0f).setInterpolator(interpolator).setDuration(300).start();
+
+    }
+
+
+
+
+    public void getFromCamera(){
+
+        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.TIRAMISU){
+            //Device version is TIRAMISU or above. We only need Camera Permission
+            requestCameraPermission.launch(new String[]{android.Manifest.permission.CAMERA});
+        }else {
+            //Device version is below TIRAMISU. We need Camera and Storage Permission
+            requestCameraPermission.launch(new String[]{android.Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE});
+        }
+    }
+
+
+    private ActivityResultLauncher<String[]> requestCameraPermission= registerForActivityResult(
+            new ActivityResultContracts.RequestMultiplePermissions(),
+            new ActivityResultCallback<Map<String, Boolean>>() {
+                @Override
+                public void onActivityResult(Map<String, Boolean> result) {
+
+                    Log.d(TAG, "onActivityResult: "+result.toString());
+
+                    //Let's check if permission granted or not
+                    boolean areAllGranted=true;
+                    for (Boolean isGranted: result.values()){
+                        areAllGranted =areAllGranted && isGranted;
+                    }
+
+                    if (areAllGranted){
+                        //Camera or Storage or both permission granted, we can now launch camera to capture image
+                        Log.d(TAG, "onActivityResult: All Granted e.g Camera, Storage");
+                        getVideoFromCamera();
+                    }else {
+                        //Camera or Storage or both permission denied, can not camera to capture image
+                        Log.d(TAG, "onActivityResult: All or Either one is denied");
+                        Toast.makeText(HomeActivity.this, "Both Camera and Storage Permission Denied", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+            }
+    );
+
+    private void getVideoFromCamera(){
+        Log.d(TAG, "pickImageCamera: ");
+
+        //setup Content Values,MediaStore to capture high quality image using Camera Intent
+        ContentValues contentValues=new ContentValues();
+        contentValues.put(MediaStore.Images.Media.TITLE,"TEMP_TITLE");
+        contentValues.put(MediaStore.Images.Media.DESCRIPTION,"TEMP_DESCRIPTION");
+
+        videoUri=getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,contentValues);
+
+        //Intent to launch Camera
+        Intent intent=new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT,videoUri);
+        cameraActivityResultLauncher.launch(intent);
+    }
+
+    private ActivityResultLauncher<Intent> cameraActivityResultLauncher=registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+
+                    //check if image capture or not
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        //Image Captured, we have image in imageUri as asinged in PickImageCamera()
+                        Log.d(TAG, "onActivityResult: Image Capture " + videoUri);
+
+
+                            try {
+                                //saving Video Data to videoUri
+                               // videoUri = data.getData();
+                                //setting video uri to videoView
+                                //  binding.videoViewMain.setVideoURI(videoUri);
+
+                                Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+                                intent.setData(videoUri);
+                                startActivity(intent);
+
+                            }catch (Exception e){
+                                Toast.makeText(HomeActivity.this, "No File Selected: "+e.toString(), Toast.LENGTH_SHORT).show();
+                            }
+                        Log.e(TAG, String.valueOf(videoUri));
+                    }
+                }
+            }
+    );
+
+
+    public void getFromGallery(){
+
+        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.TIRAMISU){
+            getVideoFromGallery();
+        }else {
+            requestsStoragePermission.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+    }
+
+
+    private ActivityResultLauncher<String> requestsStoragePermission=registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(),
+            new ActivityResultCallback<Boolean>() {
+                @Override
+                public void onActivityResult(Boolean isGranted) {
+                    Log.d(TAG, "onActivityResult: isGranted: "+isGranted);
+
+                    //Let's check if permission is granted or not
+                    if (isGranted){
+                        //  Storage Permission granted, we can now launch Gallery to pick Image
+                        getVideoFromGallery();
+                    }else {
+                        //Storage Permission denied, we can't launch  Gallery to picked Image
+                        Toast.makeText(HomeActivity.this, "Storage Permission Denied", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+    );
+
+
+    private void getVideoFromGallery(){
+        Log.d(TAG, "pickImageGallery: ");
+
+        //Intent to launch Image Picker e.g.Gallery
+        Intent intent=new Intent(Intent.ACTION_PICK);
+        //We only want to picked Image
+        intent.setType("video/*");
+        galleryActivityResultLauncher.launch(intent);
+    }
+
+    private ActivityResultLauncher<Intent> galleryActivityResultLauncher=registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+
+                    //check, if image is picked or not
+                    if (result.getResultCode()==Activity.RESULT_OK){
+                        //get data
+                        Intent data=result.getData();
+                        //get Uri of image picked
+                        videoUri=data.getData();
+                        Log.d(TAG, "onActivityResult: Image Picked from Gallery "+videoUri);
+
+                        try {
+                            //saving Video Data to videoUri
+                            // videoUri = data.getData();
+                            //setting video uri to videoView
+                            //  binding.videoViewMain.setVideoURI(videoUri);
+
+                            Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+                            intent.setData(videoUri);
+                            startActivity(intent);
+
+                        }catch (Exception e){
+                            Toast.makeText(HomeActivity.this, "No File Selected: "+e.toString(), Toast.LENGTH_SHORT).show();
+                        }
+
+                        Log.e(TAG, "onActivityResult: "+videoUri );
+
+
+                    }else {
+                        //Canceled
+                        Toast.makeText(HomeActivity.this, "Cancel", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            }
+    );
 }

@@ -37,6 +37,40 @@
         app:labelVisibilityMode="selected"
         app:menu="@menu/menu_bottom" />
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_above="@id/sellFab"
+        android:layout_centerHorizontal="true">
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/camera_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:contentDescription="TODO"
+        android:src="@drawable/baseline_photo_camera_24"
+        app:fabSize="mini" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/file_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:contentDescription="TODO"
+        android:src="@drawable/baseline_video_file_24"
+        app:fabSize="mini" />
+
+    </LinearLayout>
+
+
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/sellFab"
         android:layout_width="wrap_content"
@@ -46,6 +80,8 @@
         android:layout_marginBottom="46dp"
         android:backgroundTint="#D0C3E8"
         android:elevation="5dp"
+        android:clickable="true"
+        android:focusable="true"
         android:src="@drawable/round_add_24"
         app:tint="@color/black" />
 
