@@ -69,7 +69,7 @@ public class ProfileActivity extends AppCompatActivity {
                     Toast.makeText(ProfileActivity.this, "Name is Empty", Toast.LENGTH_SHORT).show();
                 }else {
                     //if nameEt is not empty and nameEt value to DataModel class
-                    video.setUserName(name);
+//                    video.setUserName(name);
                     //and after to Firebase Database
                     reference.child(userId).setValue(video);
                 }

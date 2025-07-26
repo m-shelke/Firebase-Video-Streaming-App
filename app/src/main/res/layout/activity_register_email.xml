@@ -150,7 +150,9 @@
                 android:id="@+id/nameEd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textCapWords" />
+                android:inputType="text"
+                android:focusable="true"
+                android:autofillHints="name"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -173,7 +175,9 @@
                 android:id="@+id/emailEt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textEmailAddress" />
+                android:inputType="textEmailAddress"
+                android:focusable="true"
+                android:autofillHints="emailAddress"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -195,7 +199,9 @@
                 android:id="@+id/passwordEt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:focusable="true"
+                android:autofillHints="password"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -217,7 +223,9 @@
                 android:id="@+id/cPasswordEt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:focusable="true"
+                android:autofillHints="password"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 

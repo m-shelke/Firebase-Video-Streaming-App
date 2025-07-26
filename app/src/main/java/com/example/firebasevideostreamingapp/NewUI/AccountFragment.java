@@ -43,7 +43,7 @@ public class AccountFragment extends Fragment {
     //Firebase Database reference
     DatabaseReference reference;
     //obj of Video DataModel class
-    Video video;
+
     private FragmentAccountBinding binding;
     private FirebaseAuth firebaseAuth;
     private Context mContext;
@@ -81,23 +81,21 @@ public class AccountFragment extends Fragment {
         //get instance of the firebase auth for Auth related task
         firebaseAuth = FirebaseAuth.getInstance();
 
+        FirebaseUser user = firebaseAuth.getCurrentUser();
 
-        //init FirebaseAuth and FirebaseUser
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // User is signed in
 
-        //value shout not be null, for that it's required
-        assert user != null;
+            //creating "UserName" reference in Firebase Database
+            reference = FirebaseDatabase.getInstance().getReference().child("VideoUsers");
 
-        //getting current UID in Variable
-        String userId = user.getUid();
+            loadMyInfo();
+        } else {
+            // No user is signed in
+        }
 
-        //instance of Video DataModel class
-        video = new Video();
 
-        //creating "UserName" reference in Firebase Database
-        reference = FirebaseDatabase.getInstance().getReference().child("VideoUsers");
 
-        loadMyInfo();
 
 
 
@@ -202,7 +200,7 @@ public class AccountFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
-                intent.putExtra(Intent.EXTRA_TEXT,"https://github.com/m-shelke/XO-Game/releases/tag/Online_OX-1.0.0");
+                intent.putExtra(Intent.EXTRA_TEXT,"https://github.com/m-shelke/Firebase-Video-Streaming-App/releases/tag/Streamy-1.0.1");
                 startActivity(Intent.createChooser(intent,"Choose Sharing Option: "));
             }
         });
@@ -212,20 +210,20 @@ public class AccountFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(mContext, DeleteAccountActivity.class));
-               // getActivity().finishAffinity(); //remove all activities from back-stack because, we delete user and it's data, so it may produced null exception if we don't remove it
+                //getActivity().finish();
             }
         });
     }
 
 
     //Retrieving Name of User from Firebase Database
-    @Override
-    public void onStart() {
-
-        loadMyInfo();
-
-        super.onStart();
-    }
+//    @Override
+//    public void onStart() {
+//
+//        loadMyInfo();
+//
+//        super.onStart();
+//    }
 
     private void loadMyInfo() {
 
@@ -243,18 +241,17 @@ public class AccountFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                Profile profile = snapshot.getValue(Profile.class);
+            //    Profile profile = snapshot.getValue(Profile.class);
 
-                //  String profileImg=""+snapshot.child("imageUrl").getValue();
+                  String profileImg=""+snapshot.child("imageUrl").getValue();
 
                 //getting "userName" value form Firebase Database
-                //  String userName = snapshot.child("name").getValue().toString();
+                  String userName = (String) snapshot.child("name").getValue();
+                  String userEmail = (String) snapshot.child("email").getValue();
 
-                //and set it to binding.userName
-                assert profile != null;
-                binding.userNameTV.setText(profile.getName());
-
-                binding.userEmailTv.setText(profile.getEmail());
+                //and set it to binding.userName and userEmail
+                binding.userNameTV.setText(userName);
+                binding.userEmailTv.setText(userEmail);
 
                 try {
 
@@ -262,7 +259,7 @@ public class AccountFragment extends Fragment {
 
 
                     Glide.with(mContext)
-                            .load(profile.getImageUrl())
+                            .load(profileImg)
                             .apply(requestOptions)
                             .placeholder(R.drawable.baseline_more_horiz_24)
                             .listener(new RequestListener<Drawable>() {

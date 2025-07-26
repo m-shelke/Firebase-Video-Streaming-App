@@ -215,6 +215,7 @@ public class MainActivity extends AppCompatActivity {
                                 video.setName(videoName);
                                 video.setDescription(description);
                                 video.setSearch(search.toLowerCase());
+                                video.setUid(firebaseAuth.getUid());
                                 video.setVideouri(downLoadUrl.toString());
 
                                 //Generating random key

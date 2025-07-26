@@ -3,18 +3,18 @@ package com.example.firebasevideostreamingapp;
 public class Video {
 
     //Variable as per Firebase Realtime Database, and must be same as Firebase Database
-    private String name,videouri,search,userName,description;
+    private String name,uid,videouri,search,description;
 
     //empty constructor while working with Firebase Realtime Database
     public Video() {
     }
 
     //parameterize constructor
-    public Video(String name, String videouri, String search, String userName, String description) {
+    public Video(String name, String videouri, String search, String uid, String description) {
         this.name = name;
         this.videouri = videouri;
         this.search = search;
-        this.userName = userName;
+        this.uid = uid;
         this.description = description;
     }
 
@@ -43,12 +43,12 @@ public class Video {
         this.search = search;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUid() {
+        return uid;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getDescription() {

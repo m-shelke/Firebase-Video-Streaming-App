@@ -84,7 +84,7 @@ public class EmailLoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //calling  onBackPressed(); to go back
-               getOnBackPressedDispatcher().onBackPressed();
+              onBackPressed();
             }
         });
 

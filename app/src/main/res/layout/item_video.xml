@@ -144,6 +144,20 @@
             app:layout_constraintEnd_toEndOf="@id/exoCardView"
             app:layout_constraintTop_toBottomOf="@id/exoCardView" />
 
+        <TextView
+            android:id="@+id/item_video_sizeTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0 MB"
+            android:paddingEnd="12dp"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:typeface="serif"
+            app:layout_constraintEnd_toEndOf="@+id/item_download"
+            app:layout_constraintStart_toStartOf="@+id/item_download"
+            app:layout_constraintTop_toBottomOf="@+id/item_download" />
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

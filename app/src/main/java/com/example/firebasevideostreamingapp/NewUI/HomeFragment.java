@@ -1,9 +1,9 @@
 package com.example.firebasevideostreamingapp.NewUI;
 
-import static androidx.core.content.ContextCompat.getSystemService;
 import static androidx.core.content.PermissionChecker.checkCallingOrSelfPermission;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Application;
 import android.app.DownloadManager;
 import android.content.Context;
@@ -13,16 +13,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.PermissionChecker;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import android.os.Environment;
-import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -31,10 +23,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.PermissionChecker;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.example.firebasevideostreamingapp.CommentActivity;
 import com.example.firebasevideostreamingapp.FullScreenActivity;
 import com.example.firebasevideostreamingapp.R;
-import com.example.firebasevideostreamingapp.ShowVideoActivity;
 import com.example.firebasevideostreamingapp.Video;
 import com.example.firebasevideostreamingapp.VideoViewHolder;
 import com.example.firebasevideostreamingapp.databinding.FragmentHomeBinding;
@@ -51,45 +51,39 @@ import com.google.firebase.database.ValueEventListener;
 
 public class HomeFragment extends Fragment {
 
-    //View Binding
-    private FragmentHomeBinding binding;
-
+    //Storage Runtime permission
+    private static final int STORAGE_PER = 100;
     //declare DatabaseReference
-    DatabaseReference reference,lkeReference;
+    DatabaseReference reference, lkeReference;
 
     //declare FirebaseDatabase
     FirebaseDatabase firebaseDatabase;
 
     //checking is like or not to video
     boolean likeChecker = false;
-
-    //Storage Runtime permission
-    private  static final int STORAGE_PER = 100;
-
     //name String for getting and setting Recycler Item and url String for passing click item url to FullScreenActivity
-    String name,url,downloadUrl;
-
+    String name, url, downloadUrl;
+    //View Binding
+    private FragmentHomeBinding binding;
     //Context for this fragment class
     private Context mContext;
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        //get and init the context for this fragment class
-        mContext=context;
-        super.onAttach(context);
-
-    }
-
 
     public HomeFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        //get and init the context for this fragment class
+        mContext = context;
+        super.onAttach(context);
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding=FragmentHomeBinding.inflate(LayoutInflater.from(mContext),container,false);
+        binding = FragmentHomeBinding.inflate(LayoutInflater.from(mContext), container, false);
         return binding.getRoot();
     }
 
@@ -134,6 +128,10 @@ public class HomeFragment extends Fragment {
         //init FirebaseUser and FirebaseAuth
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+        if (user == null) {
+            startActivity(new Intent(mContext, EmailLoginActivity.class));
+        }
+
         if (user != null) {
 
 
@@ -149,7 +147,9 @@ public class HomeFragment extends Fragment {
                 protected void onBindViewHolder(@NonNull VideoViewHolder holder, int position, @NonNull Video model) {
 
                     //calling setSimpleExoPlayer() method of VideoViewHolder class and passing req. argument
-                    holder.setSimpleExoPlayer((Application) mContext.getApplicationContext(), model.getName(),model.getDescription(), model.getVideouri());
+                    holder.setSimpleExoPlayer((Application) mContext.getApplicationContext(), model.getName(), model.getDescription(), model.getVideouri());
+
+                    holder.setVideoSizeTv(model.getVideouri());
 
                     //init FirebaseUser and FirebaseAuth
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -196,6 +196,65 @@ public class HomeFragment extends Fragment {
                         @Override
                         public void onClick(View v) {
 
+                            int sdkInt = Build.VERSION.SDK_INT;
+
+                            if (sdkInt < Build.VERSION_CODES.Q) {
+                                //for Android 9 and below (API < 29)
+
+                                if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                    ActivityCompat.requestPermissions((Activity) mContext, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PER);
+                                } else {
+
+                                    //getting downloadUrl form DataModel class
+                                    downloadUrl = getItem(holder.getAdapterPosition()).getVideouri();
+
+                                    //calling  startDownloading(downloadUrl); method
+                                    startDownloading(downloadUrl);
+
+                                    String sizeOfVideo = String.valueOf(downloadUrl.length());
+                                    Log.e("VIDEOSIZE", "onClick: " + sizeOfVideo);
+
+                                    holder.videoSizeTv.setText(sizeOfVideo);
+                                }
+                            } else if (sdkInt == Build.VERSION_CODES.Q) {
+                                //For Android 10 (API 29)
+                                //requestLegacyExternalStorage should be set in AndroidManifest.file
+
+                                //getting downloadUrl form DataModel class
+                                downloadUrl = getItem(holder.getAdapterPosition()).getVideouri();
+
+                                //calling  startDownloading(downloadUrl); method
+                                startDownloading(downloadUrl);
+
+                                String sizeOfVideo = String.valueOf(downloadUrl.length());
+                                Log.e("VIDEOSIZE", "onClick: " + sizeOfVideo);
+
+                                holder.videoSizeTv.setText(sizeOfVideo);
+
+                            } else {
+                                if (Environment.isExternalStorageManager()) {
+                                    //getting downloadUrl form DataModel class
+                                    downloadUrl = getItem(holder.getAdapterPosition()).getVideouri();
+
+                                    //calling  startDownloading(downloadUrl); method
+                                    startDownloading(downloadUrl);
+
+                                } else {
+                                    //ask usr to allow MANAGE_EXTERNAL permission manually
+                                    try {
+                                        Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                                        intent.setData(Uri.parse("package:" + requireActivity().getPackageName()));
+                                        startActivity(intent);
+                                    } catch (Exception e) {
+
+                                        Intent intent = new Intent();
+                                        intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                                        startActivity(intent);
+                                    }
+                                }
+                            }
+
+
                             //if Build.VERSION.SDK_INT is greater and equal to  Build.VERSION_CODES.M
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
@@ -214,6 +273,8 @@ public class HomeFragment extends Fragment {
 
                                     String sizeOfVideo = String.valueOf(downloadUrl.length());
                                     Log.e("VIDEOSIZE", "onClick: " + sizeOfVideo);
+
+                                    holder.videoSizeTv.setText(sizeOfVideo);
                                 }
                             } else {
                                 //getting downloadUrl form DataModel class
@@ -290,7 +351,7 @@ public class HomeFragment extends Fragment {
             firebaseRecyclerAdapter.startListening();
             //finally setting firebaseRecyclerAdapter to XML RecyclerView
             binding.recyclerview.setAdapter(firebaseRecyclerAdapter);
-        }else {
+        } else {
             binding.goneCardView.setVisibility(View.VISIBLE);
             binding.searchCv.setVisibility(View.INVISIBLE);
         }
@@ -298,7 +359,7 @@ public class HomeFragment extends Fragment {
 
 
     //creating method for performing Firebase Search Operation on Firebase Database
-    private void firebaseSearch(String searchTxt){
+    private void firebaseSearch(String searchTxt) {
 
         //getting search query in lower case
         String query = searchTxt.toLowerCase();
@@ -332,9 +393,9 @@ public class HomeFragment extends Fragment {
                         //calling Intent class and providing root Destination and Target Destination
                         Intent intent = new Intent(mContext, FullScreenActivity.class);
                         //sending name to next Activity
-                        intent.putExtra("name",name);
+                        intent.putExtra("name", name);
                         //sending url to next Activity
-                        intent.putExtra("url",url);
+                        intent.putExtra("url", url);
 
                         //finally start Activity
                         startActivity(intent);
@@ -356,7 +417,7 @@ public class HomeFragment extends Fragment {
             @Override
             public VideoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 //inflating R.layout.item_video
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_video,parent,false);
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_video, parent, false);
                 //returning VideoViewHolder(view); with view
                 return new VideoViewHolder(view);
             }
@@ -386,14 +447,13 @@ public class HomeFragment extends Fragment {
         //after successfully downing is completed, notify user on Device Screen
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         //path, where video is saved and on what name is saved, i.e System.currentTimeMillis
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,""+System.currentTimeMillis());
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "" + System.currentTimeMillis());
 
         //instance of DownloadManager, and getting System Service for DOWNLOAD_SERVICE
         DownloadManager manager = (DownloadManager) mContext.getSystemService(Context.DOWNLOAD_SERVICE);
         //Enqueue a new download. The download will start automatically once the download manager is ready to execute it and connectivity is available
         manager.enqueue(request);
     }
-
 
 
     //creating method for showing Delete dialog
@@ -417,7 +477,7 @@ public class HomeFragment extends Fragment {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                         //DataSnapshot
-                        for (DataSnapshot ds : snapshot.getChildren()){
+                        for (DataSnapshot ds : snapshot.getChildren()) {
                             //getting reference and removing entire path reference value
                             ds.getRef().removeValue();
                         }
@@ -428,7 +488,7 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
                         //and if Remove Value not get success, Show error Toast Message
-                        Toast.makeText(mContext, "Video Error: "+error.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "Video Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -459,19 +519,28 @@ public class HomeFragment extends Fragment {
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == STORAGE_PER) {//if grantResults.length > 0 and grantResults[0] == PackageManager.PERMISSION_GRANTED is also 0
+        if (requestCode == STORAGE_PER) {
+
+            //if grantResults.length > 0 and grantResults[0] == PackageManager.PERMISSION_GRANTED is also 0
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                //start downloading Video, we call this  startDownloading(downloadUrl); method
-                startDownloading(downloadUrl);
-            } else {
-                //and if the Permission is denied, then showing Toast message
-                Toast.makeText(mContext, "Permission Denied", Toast.LENGTH_SHORT).show();
+
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    if (Environment.isExternalStorageManager()) {
+                        startDownloading(downloadUrl); // All files access granted
+
+                        //start downloading Video, we call this  startDownloading(downloadUrl); method
+                        //  startDownloading(downloadUrl);
+                    } else {
+                        //and if the Permission is denied, then showing Toast message
+                        Toast.makeText(mContext, "Storage Permission Denied", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         }
     }
 
-
-    }
+}
 
 
 

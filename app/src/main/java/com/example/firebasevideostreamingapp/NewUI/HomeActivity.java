@@ -90,15 +90,15 @@ public class HomeActivity extends AppCompatActivity {
 
         showMenu();
 
-        binding.sellFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                showMenu();
-              //  chooseVideo(v);
-
-            }
-        });
+//        binding.sellFab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                showMenu();
+//              //  chooseVideo(v);
+//
+//            }
+//        });
 
         binding.bottomNv.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -139,40 +139,40 @@ public class HomeActivity extends AppCompatActivity {
 
 
     //onActivityResult for bringing the Result form user pick
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        //if requestCode, resultCode, data and data.getData() every thing according to condition, then execute this block of code
-        if (requestCode == PICK_VIDEO && resultCode == RESULT_OK && data != null && data.getData() != null){
-
-            try {
-                //saving Video Data to videoUri
-                videoUri = data.getData();
-                //setting video uri to videoView
-              //  binding.videoViewMain.setVideoURI(videoUri);
-
-                Intent intent = new Intent(HomeActivity.this, MainActivity.class);
-                intent.setData(videoUri);
-                startActivity(intent);
-
-            }catch (Exception e){
-                Toast.makeText(this, "No File Selected: "+e.toString(), Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        //if requestCode, resultCode, data and data.getData() every thing according to condition, then execute this block of code
+//        if (requestCode == PICK_VIDEO && resultCode == RESULT_OK && data != null && data.getData() != null){
+//
+//            try {
+//                //saving Video Data to videoUri
+//                videoUri = data.getData();
+//                //setting video uri to videoView
+//              //  binding.videoViewMain.setVideoURI(videoUri);
+//
+//                Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+//                intent.setData(videoUri);
+//                startActivity(intent);
+//
+//            }catch (Exception e){
+//                Toast.makeText(this, "No File Selected: "+e.toString(), Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//    }
 
 
     //onClick method on chooseVideo Button
-    public void chooseVideo(View view) {
-        //Intent class for picking the Video form Storage
-        Intent intent = new Intent();
-        //setting intent type as a Video
-        intent.setType("video/*");
-        //Allow user to select particular kind of Data and return it
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        //calling startActivityForResult method to return Result of Activity
-        startActivityForResult(intent,PICK_VIDEO);
-    }
+//    public void chooseVideo(View view) {
+//        //Intent class for picking the Video form Storage
+//        Intent intent = new Intent();
+//        //setting intent type as a Video
+//        intent.setType("video/*");
+//        //Allow user to select particular kind of Data and return it
+//        intent.setAction(Intent.ACTION_GET_CONTENT);
+//        //calling startActivityForResult method to return Result of Activity
+//        startActivityForResult(intent,PICK_VIDEO);
+//    }
 
 
     private void showHomeFragment() {
@@ -202,23 +202,6 @@ public class HomeActivity extends AppCompatActivity {
         //HomeActivity to RegisterEmailActivity
         startActivity(new Intent(HomeActivity.this, EmailLoginActivity.class));
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     private void showMenu() {

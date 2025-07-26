@@ -110,7 +110,9 @@
             android:id="@+id/updateNameEd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textCapWords" />
+            android:inputType="textCapWords"
+            android:focusable="true"
+            android:autofillHints="name"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 

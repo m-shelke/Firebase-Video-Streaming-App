@@ -5,8 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NewUI.HomeActivity"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    tools:context=".NewUI.HomeActivity">
 
     <FrameLayout
         android:id="@+id/fragmentsFl"
@@ -20,17 +20,17 @@
         android:id="@+id/bottomNv"
         android:layout_width="wrap_content"
         android:layout_height="?actionBarSize"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="false"
         android:layout_alignParentStart="false"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="10sp"
         android:background="@drawable/bottom_navigate_backgroun"
-        app:elevation="5dp"
         android:backgroundTint="@android:color/transparent"
-        android:layout_centerInParent="true"
+        app:elevation="5dp"
         app:itemActiveIndicatorStyle="@color/white"
         app:itemIconTint="@color/black"
         app:itemTextColor="@color/black"
@@ -40,35 +40,34 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
         android:layout_above="@id/sellFab"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/camera_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="2dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:contentDescription="TODO"
-        android:src="@drawable/baseline_photo_camera_24"
-        app:fabSize="mini" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/camera_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:clickable="true"
+            android:contentDescription="TODO"
+            android:focusable="true"
+            android:src="@drawable/baseline_photo_camera_24"
+            app:fabSize="mini" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/file_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:contentDescription="TODO"
-        android:src="@drawable/baseline_video_file_24"
-        app:fabSize="mini" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/file_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:clickable="true"
+            android:contentDescription="TODO"
+            android:focusable="true"
+            android:src="@drawable/baseline_video_file_24"
+            app:fabSize="mini" />
 
     </LinearLayout>
-
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -79,9 +78,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="46dp"
         android:backgroundTint="#D0C3E8"
-        android:elevation="5dp"
         android:clickable="true"
-        android:focusable="true"
+        android:elevation="5dp"
         android:src="@drawable/round_add_24"
         app:tint="@color/black" />
 

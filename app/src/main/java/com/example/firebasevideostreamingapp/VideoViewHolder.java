@@ -5,6 +5,8 @@ import static io.github.glailton.expandabletextview.ExpandableTextViewKt.EXPAND_
 
 import android.app.Application;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -29,7 +31,13 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Collections;
+import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import io.github.glailton.expandabletextview.ExpandableTextView;
 
@@ -46,7 +54,7 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
 
     //XML ImageButton, TextView and LinearLayout variable declaration
     public ImageButton likeButton,commentImg,downloadBtn;
-    TextView like_txt,commentCountTv;
+   public TextView like_txt,commentCountTv,videoSizeTv;
     public LinearLayout commentBoxclick;
     public Button deleteComment,editComment;
 
@@ -63,6 +71,7 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
 
         //finding XML view
         downloadBtn = itemView.findViewById(R.id.item_download);
+        videoSizeTv = itemView.findViewById(R.id.item_video_sizeTv);
 
         //setting OnClickListener on itemView
         itemView.setOnClickListener(new View.OnClickListener() {
@@ -300,6 +309,48 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
 
         //assigning clickListener to mClickListener
         mClickListener = clickListener;
+    }
+
+
+
+
+    public void setVideoSizeTv(String downloadUrl){
+
+
+
+        // Run background task
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
+
+
+        executor.execute(() -> {
+            try {
+                URL url = new URL(downloadUrl);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("HEAD");
+                connection.connect();
+
+                int contentLength = connection.getContentLength();
+                connection.disconnect();
+
+                if (contentLength > 0) {
+                    double sizeInMB = contentLength / (1024.0 * 1024.0);
+                    String sizeText = String.format(Locale.US, "Size: %.2f MB  ", sizeInMB);
+
+                    // Update the TextView on the main thread
+                    handler.post(() -> {
+                        // Re-check position to avoid recycling issues (optional but good)
+                        if (getBindingAdapterPosition() == getAdapterPosition()) {
+                            videoSizeTv.setText(sizeText);
+                        }
+                    });
+                } else {
+                    handler.post(() -> videoSizeTv.setText("Unknown size"));
+                }
+            } catch (IOException e) {
+                handler.post(() -> videoSizeTv.setText("Error loading size"));
+            }
+        });
     }
 
 }
