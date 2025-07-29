@@ -1,8 +1,5 @@
-package com.example.firebasevideostreamingapp;
+package com.example.firebasevideostreamingapp.Activities;
 
-import static io.github.glailton.expandabletextview.ExpandableTextViewKt.EXPAND_TYPE_LAYOUT;
-
-import android.app.Application;
 import android.app.Dialog;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,12 +14,14 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.firebasevideostreamingapp.Model.Comments;
+import com.example.firebasevideostreamingapp.R;
+import com.example.firebasevideostreamingapp.ViewHolder.VideoViewHolder;
 import com.example.firebasevideostreamingapp.databinding.ActivityCommentBinding;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;

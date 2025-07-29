@@ -81,6 +81,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="@id/linearLayout2"
             app:layout_constraintStart_toEndOf="@id/linearLayout2"
@@ -91,7 +93,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:src="@drawable/baseline_unlike_24" />
+                android:src="@drawable/baseline_thumb_up_off_alt_24" />
 
             <TextView
                 android:id="@+id/like_txt"
@@ -110,6 +112,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/item_ExpandableTv">

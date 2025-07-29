@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="2dp"
-    tools:context=".FullScreenActivity">
+    tools:context=".Activities.FullScreenActivity">
 
     <TextView
         android:id="@+id/name"

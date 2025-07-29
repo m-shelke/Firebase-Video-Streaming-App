@@ -1,4 +1,4 @@
-package com.example.firebasevideostreamingapp.NewUI;
+package com.example.firebasevideostreamingapp.Model;
 
 public class Profile {
 

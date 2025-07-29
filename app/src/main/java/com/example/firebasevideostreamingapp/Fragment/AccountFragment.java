@@ -1,4 +1,4 @@
-package com.example.firebasevideostreamingapp.NewUI;
+package com.example.firebasevideostreamingapp.Fragment;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -22,8 +22,11 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.example.firebasevideostreamingapp.Activities.ChangePasswordActivity;
+import com.example.firebasevideostreamingapp.Activities.DeleteAccountActivity;
+import com.example.firebasevideostreamingapp.Activities.EmailLoginActivity;
+import com.example.firebasevideostreamingapp.Activities.ProfileEditActivity;
 import com.example.firebasevideostreamingapp.R;
-import com.example.firebasevideostreamingapp.Video;
 import com.example.firebasevideostreamingapp.databinding.FragmentAccountBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;

@@ -5,7 +5,7 @@
     android:id="@+id/registerActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegisterEmailActivity">
+    tools:context=".Activities.RegisterEmailActivity">
 
     <!--    <RelativeLayout-->
     <!--        android:id="@+id/toolbarRL"-->
@@ -239,7 +239,7 @@
             android:layout_marginTop="10dp"
             android:clickable="true"
             android:focusable="true"
-            android:text="@string/aleady_having_account_login" />
+            android:text="@string/already_having_account_login" />
 
 
         <!-- MaterialButton: clicked to register user. -->

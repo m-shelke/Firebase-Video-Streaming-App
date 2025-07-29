@@ -1,4 +1,4 @@
-package com.example.firebasevideostreamingapp.NewUI;
+package com.example.firebasevideostreamingapp.Activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -19,9 +19,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.bumptech.glide.Glide;
 import com.example.firebasevideostreamingapp.R;
-import com.example.firebasevideostreamingapp.RegisterEmailActivity;
 import com.example.firebasevideostreamingapp.databinding.ActivityEmailLoginBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;

@@ -1,4 +1,4 @@
-package com.example.firebasevideostreamingapp;
+package com.example.firebasevideostreamingapp.Activities;
 
 import android.Manifest;
 import android.app.DownloadManager;
@@ -27,6 +27,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.firebasevideostreamingapp.Model.Video;
+import com.example.firebasevideostreamingapp.R;
+import com.example.firebasevideostreamingapp.ViewHolder.VideoViewHolder;
 import com.example.firebasevideostreamingapp.databinding.ActivityShowVideoBinding;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -39,25 +42,22 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Date;
 import java.util.Objects;
 
 public class ShowVideoActivity extends AppCompatActivity {
 
+    //Storage Runtime permission
+    private static final int STORAGE_PER = 100;
     //enabling ViewBinding
     ActivityShowVideoBinding binding;
     //declare DatabaseReference
-    DatabaseReference reference,lkeReference;
+    DatabaseReference reference, lkeReference;
     //declare FirebaseDatabase
     FirebaseDatabase firebaseDatabase;
     //checking is like or not to video
     boolean likeChecker = false;
-
-    //Storage Runtime permission
-    private  static final int STORAGE_PER = 100;
-
     //name String for getting and setting Recycler Item and url String for passing click item url to FullScreenActivity
-    String name,url,downloadUrl;
+    String name, url, downloadUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +74,6 @@ public class ShowVideoActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
-        setSupportActionBar(binding.toolBar);
 
         //init and set ActionBar Title Text
         Objects.requireNonNull(getSupportActionBar()).setTitle("");
@@ -94,7 +92,7 @@ public class ShowVideoActivity extends AppCompatActivity {
     }
 
     //creating method for performing Firebase Search Operation on Firebase Database
-    private void firebaseSearch(String searchTxt){
+    private void firebaseSearch(String searchTxt) {
 
         //getting search query in lower case
         String query = searchTxt.toLowerCase();
@@ -128,9 +126,9 @@ public class ShowVideoActivity extends AppCompatActivity {
                         //calling Intent class and providing root Destination and Target Destination
                         Intent intent = new Intent(ShowVideoActivity.this, FullScreenActivity.class);
                         //sending name to next Activity
-                        intent.putExtra("name",name);
+                        intent.putExtra("name", name);
                         //sending url to next Activity
-                        intent.putExtra("url",url);
+                        intent.putExtra("url", url);
 
                         //finally start Activity
                         startActivity(intent);
@@ -152,7 +150,7 @@ public class ShowVideoActivity extends AppCompatActivity {
             @Override
             public VideoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 //inflating R.layout.item_video
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_video,parent,false);
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_video, parent, false);
                 //returning VideoViewHolder(view); with view
                 return new VideoViewHolder(view);
             }
@@ -182,14 +180,14 @@ public class ShowVideoActivity extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull VideoViewHolder holder, int position, @NonNull Video model) {
 
                 //calling setSimpleExoPlayer() method of VideoViewHolder class and passing req. argument
-                holder.setSimpleExoPlayer(getApplication(), model.getName(),model.getDescription(), model.getVideouri());
+                holder.setSimpleExoPlayer(getApplication(), model.getName(), model.getDescription(), model.getVideouri());
 
                 //init FirebaseUser and FirebaseAuth
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 //getting current Firebase user id (Generating via Email_Authentication)
                 String currentUserId = user.getUid();
                 //getting the post video key
-                 final String postKey = getRef(position).getKey();
+                final String postKey = getRef(position).getKey();
 
                 //Overriding onItemClick and onItemLongClick abstract method
                 holder.setOnClickListener(new VideoViewHolder.Clicklistener() {
@@ -205,9 +203,9 @@ public class ShowVideoActivity extends AppCompatActivity {
                         //calling Intent class and providing root Destination and Target Destination
                         Intent intent = new Intent(ShowVideoActivity.this, FullScreenActivity.class);
                         //sending name to next Activity
-                        intent.putExtra("name",name);
+                        intent.putExtra("name", name);
                         //sending url to next Activity
-                        intent.putExtra("url",url);
+                        intent.putExtra("url", url);
 
                         //finally start Activity
                         startActivity(intent);
@@ -232,22 +230,22 @@ public class ShowVideoActivity extends AppCompatActivity {
                     public void onClick(View v) {
 
                         //if Build.VERSION.SDK_INT is greater and equal to  Build.VERSION_CODES.M
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
                             //if PackageManager.PERMISSION_DENIED
-                            if (checkCallingOrSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+                            if (checkCallingOrSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
                                 String permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
                                 //RequestPermissions
-                                requestPermissions(new String[]{permission},STORAGE_PER);
-                            }else {
+                                requestPermissions(new String[]{permission}, STORAGE_PER);
+                            } else {
                                 //getting downloadUrl form DataModel class
                                 downloadUrl = getItem(holder.getAdapterPosition()).getVideouri();
 
                                 //calling  startDownloading(downloadUrl); method
                                 startDownloading(downloadUrl);
                             }
-                        }else {
+                        } else {
                             //getting downloadUrl form DataModel class
                             downloadUrl = getItem(holder.getAdapterPosition()).getVideouri();
 
@@ -266,7 +264,7 @@ public class ShowVideoActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         //starting CommentActivity and passing video postKey to CommentActivity
                         Intent intent = new Intent(ShowVideoActivity.this, CommentActivity.class);
-                        intent.putExtra("postKey",postKey);
+                        intent.putExtra("postKey", postKey);
                         startActivity(intent);
                     }
                 });
@@ -276,7 +274,7 @@ public class ShowVideoActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         //now  likeChecker =  true; by default it's false
-                        likeChecker =  true;
+                        likeChecker = true;
 
                         //setting Value EventListener lkeReference path of JSON file
                         lkeReference.addValueEventListener(new ValueEventListener() {
@@ -284,11 +282,11 @@ public class ShowVideoActivity extends AppCompatActivity {
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                                 //if user already like the Video
-                                if (likeChecker == true){
-                                    if (snapshot.child(postKey).hasChild(currentUserId)){
+                                if (likeChecker == true) {
+                                    if (snapshot.child(postKey).hasChild(currentUserId)) {
                                         lkeReference.child(postKey).child(currentUserId).removeValue();
                                         likeChecker = false;
-                                    }else {
+                                    } else {
                                         //if it's first time, that user like the Video
                                         lkeReference.child(postKey).child(currentUserId).setValue(true);
                                         likeChecker = false;
@@ -299,7 +297,7 @@ public class ShowVideoActivity extends AppCompatActivity {
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
                                 //Showing Toast message, when "Error while Like Video
-                                Toast.makeText(ShowVideoActivity.this, "Error while Like Video: "+error.toString(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ShowVideoActivity.this, "Error while Like Video: " + error.toString(), Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -312,7 +310,7 @@ public class ShowVideoActivity extends AppCompatActivity {
             @Override
             public VideoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 //inflating R.layout.item_video
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_video,parent,false);
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_video, parent, false);
                 //returning VideoViewHolder(view); with view
                 return new VideoViewHolder(view);
             }
@@ -341,7 +339,7 @@ public class ShowVideoActivity extends AppCompatActivity {
         //after successfully downing is completed, notify user on Device Screen
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         //path, where video is saved and on what name is saved, i.e System.currentTimeMillis
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,""+System.currentTimeMillis());
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "" + System.currentTimeMillis());
 
         //instance of DownloadManager, and getting System Service for DOWNLOAD_SERVICE
         DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
@@ -387,7 +385,7 @@ public class ShowVideoActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                         //DataSnapshot
-                        for (DataSnapshot ds : snapshot.getChildren()){
+                        for (DataSnapshot ds : snapshot.getChildren()) {
                             //getting reference and removing entire path reference value
                             ds.getRef().removeValue();
                         }
@@ -398,7 +396,7 @@ public class ShowVideoActivity extends AppCompatActivity {
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
                         //and if Remove Value not get success, Show error Toast Message
-                        Toast.makeText(ShowVideoActivity.this, "Video Error: "+error.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ShowVideoActivity.this, "Video Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -421,58 +419,5 @@ public class ShowVideoActivity extends AppCompatActivity {
         AlertDialog alertDialog = builder.create();
         //show alertDialog here
         alertDialog.show();
-    }
-
-
-    //overriding onCreateOptionsMenu() method
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        //inflating menu directory with menu
-        getMenuInflater().inflate(R.menu.search_menu,menu);
-
-        //finding menu's item
-        MenuItem menuItem = menu.findItem(R.id.search_item);
-
-        //init SearchView
-        SearchView searchView = (SearchView) menuItem.getActionView();
-
-        //setting On Query TextListener to SearchView
-        assert searchView != null;
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                //calling firebaseSearch() nd search String to it
-                firebaseSearch(query);
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                //calling firebaseSearch() and search String to it
-                firebaseSearch(newText);
-                return false;
-            }
-        });
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
-        //get id of the menu item clicked
-        int itemId = item.getItemId();
-
-        //if the item id is equal to person_item, then
-        if (itemId == R.id.person_item){
-            //start ProfileActivity.class
-            Intent intent = new Intent(ShowVideoActivity.this, ProfileActivity.class);
-            //and start activity
-            startActivity(intent);
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

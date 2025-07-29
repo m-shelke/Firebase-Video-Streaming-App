@@ -1,4 +1,4 @@
-package com.example.firebasevideostreamingapp;
+package com.example.firebasevideostreamingapp.Model;
 
 public class Comments {
 

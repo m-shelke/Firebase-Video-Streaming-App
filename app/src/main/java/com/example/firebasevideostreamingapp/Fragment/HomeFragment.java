@@ -1,4 +1,4 @@
-package com.example.firebasevideostreamingapp.NewUI;
+package com.example.firebasevideostreamingapp.Fragment;
 
 import static androidx.core.content.PermissionChecker.checkCallingOrSelfPermission;
 
@@ -32,11 +32,12 @@ import androidx.core.content.PermissionChecker;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.firebasevideostreamingapp.CommentActivity;
-import com.example.firebasevideostreamingapp.FullScreenActivity;
+import com.example.firebasevideostreamingapp.Activities.CommentActivity;
+import com.example.firebasevideostreamingapp.Activities.EmailLoginActivity;
+import com.example.firebasevideostreamingapp.Activities.FullScreenActivity;
 import com.example.firebasevideostreamingapp.R;
-import com.example.firebasevideostreamingapp.Video;
-import com.example.firebasevideostreamingapp.VideoViewHolder;
+import com.example.firebasevideostreamingapp.Model.Video;
+import com.example.firebasevideostreamingapp.ViewHolder.VideoViewHolder;
 import com.example.firebasevideostreamingapp.databinding.FragmentHomeBinding;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;

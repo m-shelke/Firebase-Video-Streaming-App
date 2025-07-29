@@ -1,4 +1,4 @@
-package com.example.firebasevideostreamingapp.NewUI;
+package com.example.firebasevideostreamingapp.Activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -14,7 +14,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.firebasevideostreamingapp.MainActivity;
 import com.example.firebasevideostreamingapp.R;
 import com.example.firebasevideostreamingapp.databinding.ActivityDeleteAccountBinding;
 import com.google.android.gms.tasks.OnFailureListener;

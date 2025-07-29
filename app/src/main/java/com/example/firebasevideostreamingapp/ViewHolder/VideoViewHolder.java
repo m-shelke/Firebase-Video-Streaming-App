@@ -1,10 +1,9 @@
-package com.example.firebasevideostreamingapp;
+package com.example.firebasevideostreamingapp.ViewHolder;
 
 import static io.github.glailton.expandabletextview.ExpandableTextViewKt.EXPAND_TYPE_LAYOUT;
 import static io.github.glailton.expandabletextview.ExpandableTextViewKt.EXPAND_TYPE_POPUP;
 
 import android.app.Application;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
@@ -17,7 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.exoplayer2.ExoPlayer;
+import com.example.firebasevideostreamingapp.R;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ui.PlayerView;
@@ -28,8 +27,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -235,7 +232,7 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
                     likeCount = (int)snapshot.child(postKey).getChildrenCount();
 
                     //setting resource to likeButton ImageView
-                    likeButton.setImageResource(R.drawable.baseline_like_24);
+                    likeButton.setImageResource(R.drawable.baseline_thumb_up_alt_24);
 
                     //setting count text to TextView
                     like_txt.setText(Integer.toString(likeCount));
@@ -244,7 +241,7 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
                     likeCount = (int)snapshot.child(postKey).getChildrenCount();
 
                     //setting resource to likeButton ImageView
-                    likeButton.setImageResource(R.drawable.baseline_unlike_24);
+                    likeButton.setImageResource(R.drawable.baseline_thumb_up_off_alt_24);
 
                     //setting count text to TextView
                     like_txt.setText(Integer.toString(likeCount));

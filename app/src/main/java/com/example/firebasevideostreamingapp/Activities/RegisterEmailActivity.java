@@ -1,4 +1,4 @@
-package com.example.firebasevideostreamingapp;
+package com.example.firebasevideostreamingapp.Activities;
 
 import android.Manifest;
 import android.app.Activity;
@@ -30,7 +30,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.firebasevideostreamingapp.NewUI.HomeActivity;
+import com.example.firebasevideostreamingapp.R;
 import com.example.firebasevideostreamingapp.databinding.ActivityRegisterEmailBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;

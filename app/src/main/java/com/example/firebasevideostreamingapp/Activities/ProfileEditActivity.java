@@ -1,4 +1,4 @@
-package com.example.firebasevideostreamingapp.NewUI;
+package com.example.firebasevideostreamingapp.Activities;
 
 import android.Manifest;
 import android.app.Activity;

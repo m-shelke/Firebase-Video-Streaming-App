@@ -5,7 +5,7 @@
     android:id="@+id/emailLogin"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NewUI.EmailLoginActivity">
+    tools:context=".Activities.EmailLoginActivity">
 
 <!--    <RelativeLayout-->
 <!--        android:id="@+id/toolbarRL"-->

@@ -68,6 +68,7 @@ dependencies {
     // Add the dependencies for any other desired Firebase products
     // https://firebase.google.com/docs/android/setup#available-libraries
 
+    //Exoplayer Version
     val version_exoplayer = "2.16.1"
 
     //Exoplayer libraries
@@ -95,7 +96,7 @@ dependencies {
     implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.29")
 
 
-    //    ExoPlayer dependency
+    //    ExoPlayer media3 dependency
 //    implementation("androidx.media3:media3-exoplayer:1.5.0")
 //    implementation("androidx.media3:media3-exoplayer-dash:1.5.0")
 //    implementation("androidx.media3:media3-ui:1.5.0")

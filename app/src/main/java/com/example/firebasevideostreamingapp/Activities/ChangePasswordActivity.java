@@ -1,4 +1,4 @@
-package com.example.firebasevideostreamingapp.NewUI;
+package com.example.firebasevideostreamingapp.Activities;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
