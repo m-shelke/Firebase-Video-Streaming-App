@@ -57,7 +57,7 @@ A full-featured **Video Streaming App** built using native Android SDK. The app 
 ### 📫 Contact:
 - **Name:** Mahesh Shelke  
 - **Email:** [mshelke074@gmail.com](mailto:your.email@example.com)  
-- **LinkedIn:** [linkedin.com/in/mahes-shelke](https://linkedin.com/in/yourprofile)  
+- **LinkedIn:** [https://www.linkedin.com/in/mahes-shelke/](https://linkedin.com/in/yourprofile)  
 - **GitHub:** [https://github.com/m-shelke](https://github.com/yourusername)
 
 ---
