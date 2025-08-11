@@ -24,10 +24,13 @@ public class ForgotEmailPasswordActivity extends AppCompatActivity {
 
     //ViewBing
     private ActivityForgotEmailPasswordBinding binding;
+
     //TAG for logs in logcat
     private static final String TAG="FORGOT_PASS_TAG";
+
     //Firebase Auth for auth related task
     private FirebaseAuth firebaseAuth;
+
     //ProgressDialog to show while sending password recovery instruction
     private ProgressDialog progressDialog;
 
@@ -41,6 +44,7 @@ public class ForgotEmailPasswordActivity extends AppCompatActivity {
 
         //Attaching Root of XML Layout file
         setContentView(binding.getRoot());
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -93,7 +97,7 @@ public class ForgotEmailPasswordActivity extends AppCompatActivity {
         Log.d(TAG, "sendPasswordRecoveryInstructions: ");
 
         //show progressDialog
-        progressDialog.setMessage("Sending Password Recovery Instruction To "+email);
+        progressDialog.setMessage("Sending Password Recovery Mail On "+email);
         progressDialog.show();
 
 
@@ -105,7 +109,7 @@ public class ForgotEmailPasswordActivity extends AppCompatActivity {
 
                         //instruction sent, check email. Sometimes it goes in the spam folder, so if not in inbox check the your spam folder
                         progressDialog.dismiss();
-                        Toast.makeText(ForgotEmailPasswordActivity.this, "Password Reset Email Sent To: "+email, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ForgotEmailPasswordActivity.this, "Password Reset Mail Sent To: "+email, Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

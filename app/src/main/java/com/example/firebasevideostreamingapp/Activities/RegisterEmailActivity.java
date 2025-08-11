@@ -50,13 +50,107 @@ import java.util.Map;
 public class RegisterEmailActivity extends AppCompatActivity {
 
     private static final String TAG = "REGISTER_TAG";
+
     //ProgressDialog to show while sign-up
     ProgressDialog progressDialog;
-    String name,email, password, cPassword;
+    String name, email, password, cPassword;
     private ActivityRegisterEmailBinding binding;
     private FirebaseAuth firebaseAuth;
 
     private Uri imageUri;
+    private ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+
+                    //check if image capture or not
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+
+                        //Image Captured, we have image in imageUri as asinged in PickImageCamera()
+                        Log.d(TAG, "onActivityResult: Image Capture " + imageUri);
+
+                        //set to profileIv
+                        binding.profileImage.setImageURI(imageUri);
+                    } else {
+                        //canceled
+                        Toast.makeText(RegisterEmailActivity.this, "Image Not Capture", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+    );
+    private ActivityResultLauncher<String[]> requestCameraPermission = registerForActivityResult(
+            new ActivityResultContracts.RequestMultiplePermissions(),
+            new ActivityResultCallback<Map<String, Boolean>>() {
+                @Override
+                public void onActivityResult(Map<String, Boolean> result) {
+
+                    Log.d(TAG, "onActivityResult: " + result.toString());
+
+                    //Let's check if permission granted or not
+                    boolean areAllGranted = true;
+                    for (Boolean isGranted : result.values()) {
+                        areAllGranted = areAllGranted && isGranted;
+                    }
+
+                    if (areAllGranted) {
+                        //Camera or Storage or both permission granted, we can now launch camera to capture image
+                        Log.d(TAG, "onActivityResult: All Granted e.g Camera, Storage");
+                        pickImageCamera();
+                    } else {
+                        //Camera or Storage or both permission denied, can not camera to capture image
+                        Log.d(TAG, "onActivityResult: All or Either one is denied");
+                        Toast.makeText(RegisterEmailActivity.this, "Camera or Storage or both permission denied", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+            }
+    );
+    private ActivityResultLauncher<Intent> galleryActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+
+                    //check, if image is picked or not
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        //get data
+                        Intent data = result.getData();
+
+                        //get Uri of image picked
+                        imageUri = data.getData();
+
+                        Log.d(TAG, "onActivityResult: Image Picked from Gallery " + imageUri);
+
+                        //set to profileIv
+                        binding.profileImage.setImageURI(imageUri);
+
+                    } else {
+                        //Canceled
+                        Toast.makeText(RegisterEmailActivity.this, "Image Not Picked", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            }
+    );
+    private ActivityResultLauncher<String> requestsStoragePermission = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(),
+            new ActivityResultCallback<Boolean>() {
+                @Override
+                public void onActivityResult(Boolean isGranted) {
+                    Log.d(TAG, "onActivityResult: isGranted: " + isGranted);
+
+                    //Let's check if permission is granted or not
+                    if (isGranted) {
+                        //  Storage Permission granted, we can now launch Gallery to pick Image
+                        pickImageGallery();
+                    } else {
+                        //Storage Permission denied, we can't launch  Gallery to picked Image
+                        Toast.makeText(RegisterEmailActivity.this, "Storage Permission denied", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +166,7 @@ public class RegisterEmailActivity extends AppCompatActivity {
         });
 
 
+        //Hiding StatusBar of Device for all Build Android OS
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             getWindow().setDecorFitsSystemWindows(false);
             WindowInsetsController controller = getWindow().getInsetsController();
@@ -89,7 +184,6 @@ public class RegisterEmailActivity extends AppCompatActivity {
         }
 
 
-
         //Handled Skip button click, and go back.
 //        binding.SkipCv.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -103,9 +197,11 @@ public class RegisterEmailActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
 
         //if the user is already log-in, then jumped to MainActivity
-        if (firebaseAuth.getCurrentUser() != null){
+        if (firebaseAuth.getCurrentUser() != null) {
+
             //if user log-in directly starting MainActivity
             startActivity(new Intent(RegisterEmailActivity.this, HomeActivity.class));
+
             //and finish this activity here
             finish();
         }
@@ -122,8 +218,6 @@ public class RegisterEmailActivity extends AppCompatActivity {
 //                finish();
 //            }
 //        });
-
-
 
 
         //Handle profileImagePickFab click, show image pick popup menu
@@ -150,12 +244,7 @@ public class RegisterEmailActivity extends AppCompatActivity {
                 validateData();
             }
         });
-
-
-
-
     }
-
 
     private void validateData() {
 
@@ -167,17 +256,13 @@ public class RegisterEmailActivity extends AppCompatActivity {
 
 
         //Validate data
-        if (imageUri==null){
+        if (imageUri == null) {
             //no image to upload to storage, just update Database
             Toast.makeText(this, "Image is compulsory", Toast.LENGTH_SHORT).show();
-        }else if
-
-        (name.isEmpty()){
-            binding.nameEd.setError("Enter Name");
+        } else if (name.isEmpty()) {
+            binding.nameEd.setError("Name Please");
             binding.nameEd.requestFocus();
-        } else if
-
-        (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
 
             //email pattern is invalid, show error
             binding.emailEt.setError("Invalid Email Pattern..");
@@ -186,7 +271,7 @@ public class RegisterEmailActivity extends AppCompatActivity {
         } else if (password.isEmpty()) {
 
             //password is not enter, show error
-            binding.passwordEt.setError("Enter Paasword..");
+            binding.passwordEt.setError("Enter Password..");
             binding.passwordEt.requestFocus();
 
         } else if (!password.equals(cPassword)) {
@@ -196,15 +281,12 @@ public class RegisterEmailActivity extends AppCompatActivity {
             binding.cPasswordEt.requestFocus();
 
         } else {
-
             //all data is valid, start sign-up
             registerUser();
         }
     }
 
     private void registerUser() {
-
-
 
         //show progress
         progressDialog.setMessage("Creating Account..");
@@ -218,7 +300,7 @@ public class RegisterEmailActivity extends AppCompatActivity {
 
                         //user registration success, We also need to save user info to firebase database
                         Log.d(TAG, "onSuccess: Register Success..");
-                       uploadProfileImageStorage();
+                        uploadProfileImageStorage();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -233,28 +315,30 @@ public class RegisterEmailActivity extends AppCompatActivity {
                 });
     }
 
-
-
-    private void uploadProfileImageStorage(){
+    private void uploadProfileImageStorage() {
 
         //show progress
         progressDialog.setMessage("Uploading User Image..");
         progressDialog.show();
 
         //setup image and path e.g UserImage/profile_userid
-        String filePathAndName="UserImages/"+"profile"+firebaseAuth.getUid();
+        String filePathAndName = "UserImages/" + "profile" + firebaseAuth.getUid();
 
         //StorageReference to upload image
-        StorageReference reference= FirebaseStorage.getInstance().getReference().child(filePathAndName);
+        StorageReference reference = FirebaseStorage.getInstance().getReference().child(filePathAndName);
         reference.putFile(imageUri)
                 .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
 
-                        double progress=(100.0*snapshot.getBytesTransferred()) /snapshot.getTotalByteCount();
-                        Log.d(TAG, "onProgress: Process: "+progress);
+                        double progress = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
 
-                        progressDialog.setMessage("Uploading Profile Image.\nProgress: "+(int) progress + "%");
+                        Log.d(TAG, "onProgress: Process: " + progress+" %");
+
+                        binding.progressBar.setVisibility(View.VISIBLE);
+                        binding.progressBar.setProgress((int) progress);
+
+                        progressDialog.setMessage("Uploading Profile Image.\nProgress: " + (int) progress + "%");
                     }
                 })
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -263,61 +347,58 @@ public class RegisterEmailActivity extends AppCompatActivity {
                         //image upload successfully, get Url of upload image
                         Log.d(TAG, "onSuccess: Uploaded..!!");
 
-                        Task<Uri> uriTask=taskSnapshot.getStorage().getDownloadUrl();
+                        binding.progressBar.setProgress(100);
 
-                        while (!uriTask.isSuccessful());
-                        String uploadedImageUrl=uriTask.getResult().toString();
+                        Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
 
-                        if (uriTask.isSuccessful()){
+                        while (!uriTask.isSuccessful()) ;
+                        String uploadedImageUrl = uriTask.getResult().toString();
 
+                        if (uriTask.isSuccessful()) {
 
+                            //change progress dialog message
+                            progressDialog.setMessage("Saving user Info..");
 
-                                //change progress dialog message
-                                progressDialog.setMessage("Saving user Info..");
+                            String registerUserEmail = firebaseAuth.getCurrentUser().getEmail();
+                            //getting uid of the Registered user to save in Realtime database
+                            String registerUserId = firebaseAuth.getUid();
 
-                                //get current timestamp e.g show user registration date/time
+                            //setup data to save in firebase realtime db. most of the data will be empty and will set in edit profile
+                            HashMap<String, Object> hashMap = new HashMap<>();
+                            hashMap.put("email", registerUserEmail);
+                            hashMap.put("uid", registerUserId);
+                            hashMap.put("name", name);
+                            hashMap.put("imageUrl", uploadedImageUrl);
 
-                                String registerUserEmail = firebaseAuth.getCurrentUser().getEmail();
-                                //getting uid of the Registered user to save in Realtime database
-                                String registerUserId = firebaseAuth.getUid();
+                            //set data to firebase db
+                            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("VideoUsers");
+                            reference.child(registerUserId)
+                                    .setValue(hashMap)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
 
-                                //setup data to save in firebase realtime db. most of the data will be empty and will set in edit profile
-                                HashMap<String, Object> hashMap = new HashMap<>();
-                                hashMap.put("email", registerUserEmail);
-                                hashMap.put("uid", registerUserId);
-                                hashMap.put("name",name);
-                                hashMap.put("imageUrl",uploadedImageUrl);
+                                            //firebase db save success
+                                            Log.d(TAG, "onSuccess: Info saved...");
 
-                                //set data to firebase db
-                                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("VideoUsers");
-                                reference.child(registerUserId)
-                                        .setValue(hashMap)
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void unused) {
+                                            progressDialog.dismiss();
 
-                                                //firebase db save success
-                                                Log.d(TAG, "onSuccess: Info saved...");
+                                            startActivity(new Intent(RegisterEmailActivity.this, HomeActivity.class));
+                                            finishAffinity();
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
 
-                                                progressDialog.dismiss();
+                                            //firebase db save failed
+                                            Log.d(TAG, "onFailure: " + e.getMessage());
+                                            progressDialog.dismiss();
 
+                                            Toast.makeText(RegisterEmailActivity.this, "Failed to Save Info due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
 
-                                                startActivity(new Intent(RegisterEmailActivity.this, HomeActivity.class));
-                                                finishAffinity();
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-
-                                                //firebase db save failed
-                                                Log.d(TAG, "onFailure: " + e.getMessage());
-                                                progressDialog.dismiss();
-
-                                                Toast.makeText(RegisterEmailActivity.this, "Failed to Save Info due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
-
-                                            }
-                                        });
+                                        }
+                                    });
 
                         }
                     }
@@ -326,50 +407,22 @@ public class RegisterEmailActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         //Failed to upload image
-                        Log.e(TAG, "onFailure: ",e);
+                        Log.e(TAG, "onFailure: ", e);
                         progressDialog.dismiss();
 
-//                        Utils.toast(ProfileEditActivity.this,"Failed to Upload Profile Image due to "+e.getMessage());
+                        Toast.makeText(RegisterEmailActivity.this, "Failed to Upload Profile Image due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
+    private void imagePickDialog() {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    private void imagePickDialog(){
         //init popup menu param#1  is context and Param#2 is the UI View (profileImagePickFab) to above or below we need to show popup menu
-        PopupMenu popupMenu=new PopupMenu(this,binding.profileImagePickFab);
+        PopupMenu popupMenu = new PopupMenu(this, binding.profileImagePickFab);
+
         //add menu items to our popup menu Param#1 is GroupId,Param#2 is ItemId,Param#3 is OrderID,Param#4 Menu Item Title
-        popupMenu.getMenu().add(Menu.NONE,1,1,"Camera");
-        popupMenu.getMenu().add(Menu.NONE,2,2,"Gallery");
+        popupMenu.getMenu().add(Menu.NONE, 1, 1, "Camera");
+        popupMenu.getMenu().add(Menu.NONE, 2, 2, "Gallery");
 
         //show popup menu
         popupMenu.show();
@@ -378,26 +431,28 @@ public class RegisterEmailActivity extends AppCompatActivity {
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                //get id of the menu item clicked
-                int itemId=menuItem.getItemId();
 
-                if (itemId==1){
+                //get id of the menu item clicked
+                int itemId = menuItem.getItemId();
+
+                if (itemId == 1) {
+
                     //Camera is clicked we need to check if we have permission of Camera,Storage before launching Camera to capture Image
                     Log.d(TAG, "onMenuItemClick: Camera clicked, check if camera permission granted or not");
 
-                    if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.TIRAMISU){
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         //Device version is TIRAMISU or above. We only need Camera Permission
                         requestCameraPermission.launch(new String[]{android.Manifest.permission.CAMERA});
-                    }else {
+                    } else {
                         //Device version is below TIRAMISU. We need Camera and Storage Permission
                         requestCameraPermission.launch(new String[]{android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE});
                     }
-                } else if (itemId==2) {
+                } else if (itemId == 2) {
                     Log.d(TAG, "onMenuItemClick: Check if Storage permission is granted or not");
 
-                    if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.TIRAMISU){
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         pickImageGallery();
-                    }else {
+                    } else {
                         requestsStoragePermission.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
                     }
                 }
@@ -406,127 +461,30 @@ public class RegisterEmailActivity extends AppCompatActivity {
         });
     }
 
-
-    private ActivityResultLauncher<String> requestsStoragePermission=registerForActivityResult(
-            new ActivityResultContracts.RequestPermission(),
-            new ActivityResultCallback<Boolean>() {
-                @Override
-                public void onActivityResult(Boolean isGranted) {
-                    Log.d(TAG, "onActivityResult: isGranted: "+isGranted);
-
-                    //Let's check if permission is granted or not
-                    if (isGranted){
-                        //  Storage Permission granted, we can now launch Gallery to pick Image
-                        pickImageGallery();
-                    }else {
-                        //Storage Permission denied, we can't launch  Gallery to picked Image
-                        Toast.makeText(RegisterEmailActivity.this, "Storage Permission denied", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-    );
-
-
-
-    private ActivityResultLauncher<String[]> requestCameraPermission= registerForActivityResult(
-            new ActivityResultContracts.RequestMultiplePermissions(),
-            new ActivityResultCallback<Map<String, Boolean>>() {
-                @Override
-                public void onActivityResult(Map<String, Boolean> result) {
-
-                    Log.d(TAG, "onActivityResult: "+result.toString());
-
-                    //Let's check if permission granted or not
-                    boolean areAllGranted=true;
-                    for (Boolean isGranted: result.values()){
-                        areAllGranted =areAllGranted && isGranted;
-                    }
-
-                    if (areAllGranted){
-                        //Camera or Storage or both permission granted, we can now launch camera to capture image
-                        Log.d(TAG, "onActivityResult: All Granted e.g Camera, Storage");
-                        pickImageCamera();
-                    }else {
-                        //Camera or Storage or both permission denied, can not camera to capture image
-                        Log.d(TAG, "onActivityResult: All or Either one is denied");
-                        Toast.makeText(RegisterEmailActivity.this, "Camera or Storage or both permission denied", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-            }
-    );
-
-    private void pickImageCamera(){
+    private void pickImageCamera() {
         Log.d(TAG, "pickImageCamera: ");
 
         //setup Content Values,MediaStore to capture high quality image using Camera Intent
-        ContentValues contentValues=new ContentValues();
-        contentValues.put(MediaStore.Images.Media.TITLE,"TEMP_TITLE");
-        contentValues.put(MediaStore.Images.Media.DESCRIPTION,"TEMP_DESCRIPTION");
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MediaStore.Images.Media.TITLE, "TEMP_TITLE");
+        contentValues.put(MediaStore.Images.Media.DESCRIPTION, "TEMP_DESCRIPTION");
 
-        imageUri=getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,contentValues);
+        imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
 
         //Intent to launch Camera
-        Intent intent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT,imageUri);
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         cameraActivityResultLauncher.launch(intent);
     }
 
-    private ActivityResultLauncher<Intent> cameraActivityResultLauncher=registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-
-                    //check if image capture or not
-                    if (result.getResultCode()== Activity.RESULT_OK){
-                        //Image Captured, we have image in imageUri as asinged in PickImageCamera()
-                        Log.d(TAG, "onActivityResult: Image Capture "+imageUri);
-
-                        //set to profileIv
-                        binding.profileImage.setImageURI(imageUri);
-                    }else {
-                        //canceled
-                        Toast.makeText(RegisterEmailActivity.this, "Cancel", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-    );
-
-    private void pickImageGallery(){
+    private void pickImageGallery() {
         Log.d(TAG, "pickImageGallery: ");
 
         //Intent to launch Image Picker e.g.Gallery
-        Intent intent=new Intent(Intent.ACTION_PICK);
+        Intent intent = new Intent(Intent.ACTION_PICK);
         //We only want to picked Image
         intent.setType("image/*");
         galleryActivityResultLauncher.launch(intent);
     }
-
-    private ActivityResultLauncher<Intent> galleryActivityResultLauncher=registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-
-                    //check, if image is picked or not
-                    if (result.getResultCode()==Activity.RESULT_OK){
-                        //get data
-                        Intent data=result.getData();
-                        //get Uri of image picked
-                        imageUri=data.getData();
-                        Log.d(TAG, "onActivityResult: Image Picked from Gallery "+imageUri);
-
-                        //set to profileIv
-                        binding.profileImage.setImageURI(imageUri);
-
-                    }else {
-                        //Canceled
-                        Toast.makeText(RegisterEmailActivity.this, "Cancel", Toast.LENGTH_SHORT).show();
-                    }
-
-                }
-            }
-    );
 
 }

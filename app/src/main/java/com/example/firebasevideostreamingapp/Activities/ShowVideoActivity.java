@@ -48,14 +48,18 @@ public class ShowVideoActivity extends AppCompatActivity {
 
     //Storage Runtime permission
     private static final int STORAGE_PER = 100;
+
     //enabling ViewBinding
     ActivityShowVideoBinding binding;
+
     //declare DatabaseReference
     DatabaseReference reference, lkeReference;
     //declare FirebaseDatabase
     FirebaseDatabase firebaseDatabase;
+
     //checking is like or not to video
     boolean likeChecker = false;
+
     //name String for getting and setting Recycler Item and url String for passing click item url to FullScreenActivity
     String name, url, downloadUrl;
 

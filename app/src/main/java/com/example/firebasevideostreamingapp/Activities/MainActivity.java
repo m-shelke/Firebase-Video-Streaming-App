@@ -29,6 +29,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -37,10 +38,9 @@ public class MainActivity extends AppCompatActivity {
     //inti Binding
     ActivityMainBinding binding;
 
-    //Unique code for Activity Result
-    private static final int PICK_VIDEO = 100;
     //Uri for storing Video to Firebase
     private Uri videoUri;
+
     //MediaController for Video controls
     MediaController mediaController;
 
@@ -49,10 +49,13 @@ public class MainActivity extends AppCompatActivity {
 
     // Firebase Storage Reference
     StorageReference storageReference;
+
     //Firebase Realtime Database reference
     DatabaseReference databaseReference;
+
     //Data Model class
     Video video;
+
     //for upload operation
     UploadTask uploadTask;
 
@@ -91,26 +94,24 @@ public class MainActivity extends AppCompatActivity {
 
         //init Data Model class
         video = new Video();
+
         //init Firebase Storage
         storageReference = FirebaseStorage.getInstance().getReference("Video");
+
         //init Firebase Realtime Database
         databaseReference = FirebaseDatabase.getInstance().getReference("Video");
 
         //init MediaController class
         mediaController = new MediaController(MainActivity.this);
+
         //setting mediaController to VideoView
         binding.videoViewMain.setMediaController(mediaController);
+
         //starting VideoView
         binding.videoViewMain.start();
 
         //get instance of the firebase auth for firebase auth related task
         firebaseAuth=FirebaseAuth.getInstance();
-
-        //user is not logged in, move to RegisterEmailActivity
-        if (firebaseAuth.getCurrentUser()==null) {
-            //MainActivity to RegisterEmailActivity
-            startActivity(new Intent(this, EmailLoginActivity.class));
-        }
 
     }
 
@@ -152,6 +153,13 @@ public class MainActivity extends AppCompatActivity {
 
     //uploading video, when Button get clicked
     public void uploadVideo(View view) {
+
+        //user is not logged in, move to RegisterEmailActivity
+//        if (firebaseAuth.getCurrentUser()==null) {
+//            //MainActivity to RegisterEmailActivity
+//            Toast.makeText(this, "You Not Login Yet", Toast.LENGTH_SHORT).show();
+//        }
+
         //Getting video name from EditText
         String videoName = binding.videoNameEt.getText().toString();
 
@@ -167,15 +175,22 @@ public class MainActivity extends AppCompatActivity {
 
             //Visible progressBar, while uploading
             progressDialog.setTitle("Please Wait...");
-            progressDialog.setMessage("Uploading Video");
-            progressDialog.setCancelable(true);
-            progressDialog.show();
+
 
             //storing video in StorageReference "Video" reference but reference name is current Time in Milli second and specify extension as videoUri
             final StorageReference reference = storageReference.child(System.currentTimeMillis() + "." + getExtension(videoUri));
 
             //and finally putting file in Storage
-            uploadTask = reference.putFile(videoUri);
+            uploadTask = (UploadTask) reference.putFile(videoUri)
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                            int percentage = (int) ((100 * snapshot.getBytesTransferred()) /snapshot.getTotalByteCount());
+                            progressDialog.setMessage("Uploading Video \n Progress: "+percentage+" %");
+                            progressDialog.setCancelable(true);
+                            progressDialog.show();
+                        }
+                    });
 
             //Retrieving uri of Uploaded or saved video
             Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
@@ -199,14 +214,9 @@ public class MainActivity extends AppCompatActivity {
 
                             //if task is successful
                             if (task.isSuccessful()){
+
                                 //getting downLoadUrl
                                 Uri downLoadUrl = task.getResult();
-
-                                //Hiding ProgressBar
-                              progressDialog.dismiss();
-
-                                //showing Toast message, when video uploaded successfully
-                                Toast.makeText(MainActivity.this, "Video Saved", Toast.LENGTH_SHORT).show();
 
                                 //giving videoName, search and downLoadUrl to Data Model class i.e Video
                                 video.setName(videoName);
@@ -220,6 +230,13 @@ public class MainActivity extends AppCompatActivity {
 
                                 //storing all Data Model data to Firebase Realtime Database
                                 databaseReference.child(i).setValue(video);
+
+                                //showing Toast message, when video uploaded successfully
+                                Toast.makeText(MainActivity.this, "Video Saved", Toast.LENGTH_SHORT).show();
+
+                                //Hiding ProgressBar
+                                progressDialog.dismiss();
+
                             }else {
                                 //showing Toast message, when Video is not uploaded
                                 Toast.makeText(MainActivity.this, "Video Uploading Failed", Toast.LENGTH_SHORT).show();

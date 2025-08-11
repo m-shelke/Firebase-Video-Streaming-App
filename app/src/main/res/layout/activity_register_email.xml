@@ -7,6 +7,16 @@
     android:layout_height="match_parent"
     tools:context=".Activities.RegisterEmailActivity">
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="100"
+        android:visibility="gone"
+        android:progress="0"/>
+
+
     <!--    <RelativeLayout-->
     <!--        android:id="@+id/toolbarRL"-->
     <!--        android:layout_width="match_parent"-->

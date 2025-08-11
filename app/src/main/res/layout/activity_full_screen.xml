@@ -29,5 +29,4 @@
         app:resize_mode="fill"
         app:use_controller="true" />
 
-
 </LinearLayout>

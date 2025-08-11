@@ -54,18 +54,22 @@ public class HomeFragment extends Fragment {
 
     //Storage Runtime permission
     private static final int STORAGE_PER = 100;
+
     //declare DatabaseReference
-    DatabaseReference reference, lkeReference;
+    DatabaseReference reference, lkeReference,viewsReference;
 
     //declare FirebaseDatabase
     FirebaseDatabase firebaseDatabase;
 
     //checking is like or not to video
     boolean likeChecker = false;
+
     //name String for getting and setting Recycler Item and url String for passing click item url to FullScreenActivity
     String name, url, downloadUrl;
+
     //View Binding
     private FragmentHomeBinding binding;
+
     //Context for this fragment class
     private Context mContext;
 
@@ -135,7 +139,6 @@ public class HomeFragment extends Fragment {
 
         if (user != null) {
 
-
             //FirebaseRecyclerOptions
             FirebaseRecyclerOptions<Video> options =
                     new FirebaseRecyclerOptions.Builder<Video>()
@@ -157,6 +160,7 @@ public class HomeFragment extends Fragment {
 
                     //getting current Firebase user id (Generating via Email_Authentication)
                     String currentUserId = user.getUid();
+
                     //getting the post video key
                     final String postKey = getRef(position).getKey();
 
@@ -164,17 +168,24 @@ public class HomeFragment extends Fragment {
                     holder.setOnClickListener(new VideoViewHolder.Clicklistener() {
                         @Override
                         public void onItemClick(View view, int position) {
+
                             //getting name item clicked
                             name = getItem(position).getName();
+
                             //getting uri item clicked
                             url = getItem(position).getVideouri();
 
                             //calling Intent class and providing root Destination and Target Destination
                             Intent intent = new Intent(mContext, FullScreenActivity.class);
+
                             //sending name to next Activity
                             intent.putExtra("name", name);
+
                             //sending url to next Activity
                             intent.putExtra("url", url);
+
+                            //sending postKey of video to FullScreenActivity
+                            intent.putExtra("postKey",postKey);
 
                             //finally start Activity
                             startActivity(intent);
@@ -186,10 +197,12 @@ public class HomeFragment extends Fragment {
 
                             //getting name item, that want to Delete
                             name = getItem(position).getName();
+
                             //creating method for Deleting RecyclerView item
                             showDeleteDialog(name);
                         }
                     });
+
 
 
                     //setting ClickListener on download button
@@ -348,10 +361,12 @@ public class HomeFragment extends Fragment {
                 }
             };
 
-            //start Listening firebaseRecyclerAdapter
-            firebaseRecyclerAdapter.startListening();
+
             //finally setting firebaseRecyclerAdapter to XML RecyclerView
             binding.recyclerview.setAdapter(firebaseRecyclerAdapter);
+
+            //start Listening firebaseRecyclerAdapter
+            firebaseRecyclerAdapter.startListening();
         } else {
             binding.goneCardView.setVisibility(View.VISIBLE);
             binding.searchCv.setVisibility(View.INVISIBLE);
@@ -459,10 +474,13 @@ public class HomeFragment extends Fragment {
 
     //creating method for showing Delete dialog
     private void showDeleteDialog(String name) {
+
         //AlertDialog Builder
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
         //AlertDialog Title
         builder.setTitle("Delete");
+
         //AlertDialog Message
         builder.setMessage("Sure about Delete");
 
@@ -473,12 +491,14 @@ public class HomeFragment extends Fragment {
 
                 //Firebase Database Query
                 Query query = reference.orderByChild("name").equalTo(name);
+
                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                         //DataSnapshot
                         for (DataSnapshot ds : snapshot.getChildren()) {
+
                             //getting reference and removing entire path reference value
                             ds.getRef().removeValue();
                         }
@@ -500,6 +520,7 @@ public class HomeFragment extends Fragment {
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
                 //dismiss the dialog box here
                 dialog.dismiss();
             }
@@ -510,6 +531,7 @@ public class HomeFragment extends Fragment {
 
         //or this is way of Creating Alert Builder
         AlertDialog alertDialog = builder.create();
+
         //show alertDialog here
         alertDialog.show();
     }

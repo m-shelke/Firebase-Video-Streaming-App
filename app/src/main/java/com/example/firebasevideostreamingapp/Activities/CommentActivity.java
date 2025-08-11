@@ -64,6 +64,7 @@ public class CommentActivity extends AppCompatActivity {
 
         //inflating XML file
         binding = ActivityCommentBinding.inflate(getLayoutInflater());
+
         //Attaching XML root
         setContentView(binding.getRoot());
 
@@ -137,7 +138,7 @@ public class CommentActivity extends AppCompatActivity {
         comments = new Comments();
 
         //getting postKey form ShowActivity
-        postKey = getIntent().getExtras().getString("postKey");
+        postKey = Objects.requireNonNull(getIntent().getExtras()).getString("postKey");
 
         //init FirebaseUser and FirebaseAuth to get current User ID
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

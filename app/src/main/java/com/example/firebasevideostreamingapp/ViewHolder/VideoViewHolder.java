@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -20,6 +21,7 @@ import com.example.firebasevideostreamingapp.R;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -51,7 +53,7 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
 
     //XML ImageButton, TextView and LinearLayout variable declaration
     public ImageButton likeButton,commentImg,downloadBtn;
-   public TextView like_txt,commentCountTv,videoSizeTv;
+   public TextView like_txt,commentCountTv,viewsCountTv,videoSizeTv;
     public LinearLayout commentBoxclick;
     public Button deleteComment,editComment;
 
@@ -59,7 +61,7 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
     int likeCount,commentCount;
 
     //Database instance
-    DatabaseReference reference,postReference;
+    DatabaseReference reference,postReference,viewsReference;
 
 
     //Matching super constructor
@@ -157,9 +159,6 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
         simpleExoPlayer.setPlayWhenReady(false);
 
 
-
-
-
         //This code is deprecate now, because we used updated dependencies
         /*try {
             //provides estimates of the currently available Bandwidth
@@ -188,6 +187,33 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
         likeButton = itemView.findViewById(R.id.like_button);
         like_txt = itemView.findViewById(R.id.like_txt);
 
+        viewsCountTv = itemView.findViewById(R.id.view_txt);
+
+        // Get Firebase reference
+        viewsReference = FirebaseDatabase.getInstance()
+                .getReference("Video")
+                .child(postKey)
+                .child("views");
+
+
+        // Attach a listener to read the views count
+        viewsReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Long views = snapshot.getValue(Long.class); // Firebase stores numbers as Long
+                if (views != null) {
+                    viewsCountTv.setText(""+views);
+                } else {
+                    viewsCountTv.setText("0");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(viewsCountTv.getContext(), "Failed to load views", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         //getting instance of Firebase Database and creating "Likes" path Json in Database
         reference = FirebaseDatabase.getInstance().getReference("Likes");
 
@@ -206,8 +232,10 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 if (snapshot.exists()){
+
                     //getting Children Count
                     commentCount = (int) snapshot.getChildrenCount();
+
                     //and set it's to
                     commentCountTv.setText(Integer.toString(commentCount));
                 }
@@ -260,8 +288,10 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
 
         //finding View id and references
         TextView item_comment_dateTime = itemView.findViewById(R.id.item_comment_dateTime);
+
        // TextView item_comment_lorem = itemView.findViewById(R.id.item_comment_lorem);
         TextView item_comment_author = itemView.findViewById(R.id.item_comment_author);
+
         commentBoxclick = itemView.findViewById(R.id.commentBoxClick);
         deleteComment = itemView.findViewById(R.id.deleteComment);
         editComment = itemView.findViewById(R.id.editComment);
@@ -312,8 +342,6 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
 
 
     public void setVideoSizeTv(String downloadUrl){
-
-
 
         // Run background task
         ExecutorService executor = Executors.newSingleThreadExecutor();

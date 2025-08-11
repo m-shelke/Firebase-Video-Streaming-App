@@ -48,9 +48,6 @@ public class HomeActivity extends AppCompatActivity {
     //instance of FirebaseAuth
     private FirebaseAuth firebaseAuth;
 
-    //Unique code for Activity Result
-    private static final int PICK_VIDEO = 101;
-
     //Uri for storing Video to Firebase
     private Uri videoUri;
 
@@ -175,8 +172,8 @@ public class HomeActivity extends AppCompatActivity {
         //  binding.toolbarTitleTv.setText("Home");
 
         //show fragment
-        HomeFragment homeFragment=new HomeFragment();
-        FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
+        HomeFragment homeFragment = new HomeFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(binding.fragmentsFl.getId(),homeFragment,"HomeFragment");
         fragmentTransaction.commit();
     }

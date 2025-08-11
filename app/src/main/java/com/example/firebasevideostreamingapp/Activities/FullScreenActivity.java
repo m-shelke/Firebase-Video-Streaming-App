@@ -4,11 +4,14 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
@@ -24,6 +27,18 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
+
+import org.checkerframework.checker.nullness.qual.NonNull;
+
+import java.util.Objects;
 
 public class FullScreenActivity extends AppCompatActivity {
 
@@ -32,8 +47,9 @@ public class FullScreenActivity extends AppCompatActivity {
 
     //Layout Variable
     private ExoPlayer exoPlayer;
-    //name String for getting and setting Recycler Item and url String for getting url form previous activity
-    private String name, url;
+
+    //name String for getting and setting Recycler Item and url String for getting url form previous activity and getting post key of video form ShowVideoActivity
+    private String name, url, postKey;
 
     private boolean playWhenReady = false;
     private int currentWindow = 0;
@@ -48,6 +64,7 @@ public class FullScreenActivity extends AppCompatActivity {
 
         //getting XML Layout
         binding = ActivityFullScreenBinding.inflate(getLayoutInflater());
+
         //setting XML root to ActivityFullScreenBinding
         setContentView(binding.getRoot());
 
@@ -66,43 +83,49 @@ public class FullScreenActivity extends AppCompatActivity {
 //        }
 
 
-
-
 //        ActionBar actionBar = getSupportActionBar();
 //        actionBar.setTitle("Full Screen");
 //
 //        actionBar.setDisplayHomeAsUpEnabled(true);
 //        actionBar.setDisplayShowHomeEnabled(true);
 
-        Intent intent = getIntent();
-        name = intent.getExtras().getString("name");
-        url = intent.getExtras().getString("url");
 
+        //getIntent instance
+        Intent intent = getIntent();
+        //Getting name of Video form previous activity
+        name = Objects.requireNonNull(intent.getExtras()).getString("name");
+        //Getting url of Video form previous activity
+        url = intent.getExtras().getString("url");
+        //getting postKey from ShowVideoActivity
+        postKey = intent.getExtras().getString("postKey");
+
+        //setting name of video to name textview
         binding.name.setText(name);
 
-
+        //getting fullScreenButton reference
         ImageView fullScreenButton = binding.playerView.findViewById(R.id.exo_fullscreen_icon);
 
+        //calling initializePlayer(); method
         initializePlayer();
 
 
+        //clicked event on fullScreenButton icon
         fullScreenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if (fullScreen) {
 
-
                     fullScreenButton.setImageDrawable(ContextCompat.getDrawable(FullScreenActivity.this, R.drawable.baseline_fullscreen_24));
                     getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
 
                     if (getSupportActionBar() != null) {
-                        getSupportActionBar().show();
+                        getSupportActionBar().hide();
                     }
 
-                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
                     LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) binding.playerView.getLayoutParams();
-                    params.width = params.MATCH_PARENT;
+                    params.width = ViewGroup.LayoutParams.MATCH_PARENT;
                     params.height = (int) (200 * getApplicationContext().getResources().getDisplayMetrics().density);
                     binding.playerView.setLayoutParams(params);
 
@@ -122,12 +145,51 @@ public class FullScreenActivity extends AppCompatActivity {
 
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                     LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) binding.playerView.getLayoutParams();
-                    params.width = params.MATCH_PARENT;
-                    params.height = params.MATCH_PARENT;
+                    params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                    params.height = ViewGroup.LayoutParams.MATCH_PARENT;
                     binding.playerView.setLayoutParams(params);
 
                     binding.name.setVisibility(View.GONE);
                     fullScreen = true;
+
+
+                    DatabaseReference videoRef = FirebaseDatabase.getInstance().getReference().child("Video").child(postKey);
+                    String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+
+                    videoRef.child("viewedUsers").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (!snapshot.exists()) {
+                                // User hasn't viewed the video before
+                                // Increment views count
+                                videoRef.child("views").runTransaction(new Transaction.Handler() {
+                                    @Override
+                                    public Transaction.@NonNull Result doTransaction(@NonNull MutableData currentData) {
+                                        Integer currentViews = currentData.getValue(Integer.class);
+                                        if (currentViews == null) {
+                                            currentData.setValue(1);
+                                        } else {
+                                            currentData.setValue(currentViews + 1);
+                                        }
+                                        return Transaction.success(currentData);
+                                    }
+
+                                    @Override
+                                    public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
+                                        if (committed) {
+                                            // Mark user as having viewed
+                                            videoRef.child("viewedUsers").child(userId).setValue(true);
+                                        }
+                                    }
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            // Handle errors here
+                        }
+                    });
                 }
             }
         });
@@ -138,10 +200,12 @@ public class FullScreenActivity extends AppCompatActivity {
                 exoPlayer.stop();
             }
         });
-
     }
 
+
+
     private MediaSource mediaSource(Uri uri) {
+
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this, "Video");
         return new ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(uri);
     }
@@ -150,11 +214,13 @@ public class FullScreenActivity extends AppCompatActivity {
 
         //Building ExoPlayer
         exoPlayer = new ExoPlayer.Builder(this).build();
+
         //setting Player to ExoPlayer PlayView
         binding.playerView.setPlayer(exoPlayer);
 
         //parsing Uri
         Uri uri = Uri.parse(url);
+
         //creating obj of MediaItem class and providing resource id i.e uri
         MediaItem mediaItem = MediaItem.fromUri(uri);
 
@@ -185,7 +251,7 @@ public class FullScreenActivity extends AppCompatActivity {
         super.onResume();
 
         if(Util.SDK_INT >= 26 && exoPlayer  == null){
-//            initializePlayer();
+            initializePlayer();
         }
     }
 
@@ -220,8 +286,8 @@ public class FullScreenActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        exoPlayer.stop();
 
+        exoPlayer.stop();
         final Intent intent = new Intent();
         setResult(RESULT_OK,intent);
         finish();

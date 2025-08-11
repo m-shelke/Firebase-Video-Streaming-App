@@ -129,7 +129,7 @@ public class EmailLoginActivity extends AppCompatActivity {
 
         //input data
         email=binding.emailEt.getText().toString().trim();
-        password=binding.passwordEt.getText().toString();
+        password=binding.passwordEt.getText().toString().trim();
 
         Log.d(TAG,"ValidateData: email: "+email);
         Log.d(TAG,"ValidateData: Password: "+password);
@@ -154,7 +154,7 @@ public class EmailLoginActivity extends AppCompatActivity {
     private void loginUser() {
 
         //show progress..
-        progressDialog.setMessage("Login In");
+        progressDialog.setMessage("Login In..");
         progressDialog.show();
 
         //start user login

@@ -69,7 +69,6 @@
 
     </LinearLayout>
 
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/sellFab"
         android:layout_width="wrap_content"
