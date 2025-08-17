@@ -44,6 +44,7 @@ public class AccountFragment extends Fragment {
 
     private static final String TAG = "AccountFragment";
     //Firebase Database reference
+
     DatabaseReference reference;
     //obj of Video DataModel class
 
@@ -86,8 +87,8 @@ public class AccountFragment extends Fragment {
 
         FirebaseUser user = firebaseAuth.getCurrentUser();
 
+        // User is signed in
         if (user != null) {
-            // User is signed in
 
             //creating "UserName" reference in Firebase Database
             reference = FirebaseDatabase.getInstance().getReference().child("VideoUsers");

@@ -57,7 +57,7 @@ public class HomeActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
 
         //activity_main.xml = ActivityMainBinding
-        binding=ActivityHomeBinding.inflate(getLayoutInflater());
+        binding = ActivityHomeBinding.inflate(getLayoutInflater());
         //Attaching Layout root
         setContentView(binding.getRoot());
 
@@ -69,7 +69,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
         //get instance of the firebase auth for firebase auth related task
-        firebaseAuth=FirebaseAuth.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
 
         //if the current User in equal to null, then start Register User Activity
         if (firebaseAuth.getCurrentUser()==null){
