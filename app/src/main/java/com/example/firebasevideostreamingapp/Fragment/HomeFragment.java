@@ -41,6 +41,8 @@ import com.example.firebasevideostreamingapp.ViewHolder.VideoViewHolder;
 import com.example.firebasevideostreamingapp.databinding.FragmentHomeBinding;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -49,6 +51,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class HomeFragment extends Fragment {
 
@@ -87,8 +91,10 @@ public class HomeFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         binding = FragmentHomeBinding.inflate(LayoutInflater.from(mContext), container, false);
+        //attaching root of xml file
         return binding.getRoot();
     }
 
@@ -119,12 +125,14 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //calling   firebaseSearch(s.toString()); method and passing req. argument
                 firebaseSearch(s.toString());
 
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+                //calling   firebaseSearch(s.toString()); method and passing req. argument
                 firebaseSearch(s.toString());
             }
         });
@@ -133,10 +141,12 @@ public class HomeFragment extends Fragment {
         //init FirebaseUser and FirebaseAuth
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+        //if the user is not logged-in then direct to EmailLoginActivity
         if (user == null) {
             startActivity(new Intent(mContext, EmailLoginActivity.class));
         }
 
+        //if the user is logged-in then start displaying Firebase Video
         if (user != null) {
 
             //FirebaseRecyclerOptions
@@ -198,8 +208,12 @@ public class HomeFragment extends Fragment {
                             //getting name item, that want to Delete
                             name = getItem(position).getName();
 
-                            //creating method for Deleting RecyclerView item
-                            showDeleteDialog(name);
+                            //getting video url of item clicked
+                            url = getItem(position).getVideouri();
+
+
+                            //creating method for Deleting RecyclerView item and passing name for deleting video from realtime database and url for deleting video from firebase storage
+                            showDeleteDialog(name,url);
                         }
                     });
 
@@ -422,8 +436,12 @@ public class HomeFragment extends Fragment {
 
                         //getting name item, that want to Delete
                         name = getItem(position).getName();
-                        //creating method for Deleting RecyclerView item
-                        showDeleteDialog(name);
+
+                        //getting video uri of item clicked
+                        url = getItem(position).getVideouri();
+
+                        //creating method for Deleting RecyclerView item and passing name for deleting video from realtime database and url for deleting video from firebase storage
+                        showDeleteDialog(name,url);
                     }
                 });
             }
@@ -473,7 +491,7 @@ public class HomeFragment extends Fragment {
 
 
     //creating method for showing Delete dialog
-    private void showDeleteDialog(String name) {
+    private void showDeleteDialog(String name, String videoUrl) {
 
         //AlertDialog Builder
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -508,8 +526,30 @@ public class HomeFragment extends Fragment {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
+
                         //and if Remove Value not get success, Show error Toast Message
                         Toast.makeText(mContext, "Video Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                //we get video url successfully
+                Log.e("VIDEOURL",videoUrl);
+
+                //Firebase Storage Reference for deleting the video from firebase storage by passing and using video url
+                StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(videoUrl);
+
+                //delete operation
+                storageReference.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+
+                        //if the task is successful
+                        if (task.isSuccessful())
+                            //then show a toast message
+                        Toast.makeText(mContext, "Video Deleted From Firebase Storage As Well", Toast.LENGTH_SHORT).show();
+                        else
+                            //or task is not successful, then show error
+                            Toast.makeText(mContext, "Error: "+task.getException(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
